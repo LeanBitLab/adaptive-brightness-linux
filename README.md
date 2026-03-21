@@ -51,3 +51,7 @@ It uses a simple `HHMM=PERCENT` format representing 30-minute intervals:
 ## Logs & Diagnostics
 To see the script in action or debug what it is evaluating, you can view the logs at:
 `~/.local/state/auto-brightness.log`
+
+## Advanced Features & Mechanics
+Curious about how the mathematical adaptive learning model works under the hood, or how to write your own custom 15-minute cron configurations? 
+👉 **[Read the Full Architecture & Customization Guide here](script-guide.md)**
