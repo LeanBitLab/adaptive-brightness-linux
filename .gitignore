@@ -1,0 +1,9 @@
+# Logs
+*.log
+*.tmp
+
+# Local State
+*.state
+
+# Local configuration
+profiles.conf

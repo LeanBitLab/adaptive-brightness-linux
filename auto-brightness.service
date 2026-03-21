@@ -1,0 +1,11 @@
+[Unit]
+Description=Auto-adjust screen brightness with adaptive learning
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/auto-brightness.sh
+Environment=DISPLAY=:0
+
+[Install]
+WantedBy=default.target
