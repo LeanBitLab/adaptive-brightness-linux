@@ -6,8 +6,8 @@ A lightweight, intelligent auto-brightness script for Linux that automatically a
 
 ## How It Works
 - **Time-Based Profiles:** By default, brightness smoothly ramps up during sunrise, peaks during the day, and gracefully ramps down during sunset into the night.
-- **Adaptive Learning:** The script runs in the background. If you manually change your screen brightness using your keyboard or desktop environment slider, the script detects your intervention using mathematical comparisons. It then **permanently saves** your newly preferred brightness to the currently active time block's profile! 
-- **Granular Control:** Profiles run in 30-minute intervals, providing continuous, smooth transitions without shocking your eyes.
+- **Adaptive Learning:** The script runs in the background. If you manually change your screen brightness using your keyboard or desktop environment slider, the script detects your intervention using mathematical comparisons. It then **permanently saves** your newly preferred brightness to the currently active time block's profile!
+- **Granular Control:** Profiles run in 15-30 minute intervals, providing continuous, smooth transitions without shocking your eyes.
 - **Hardware Agnostic:** Communicates directly with the Linux kernel's `/sys/class/backlight` using `brightnessctl`, which means it works seamlessly on GNOME, KDE Plasma, XFCE, Sway, Hyprland, and other window managers.
 
 ## Prerequisites
@@ -41,11 +41,16 @@ chmod +x install.sh
 The installation creates a configuration file where it stores your learned profiles. You can explicitly manually edit it at:
 `~/.config/auto-brightness/profiles.conf`
 
-It uses a simple `HHMM=PERCENT` format representing 30-minute intervals:
+It uses a simple `HHMM=PERCENT` format with 15-30 minute intervals:
 ```text
-0900=60
-1700=56
-1930=38
+# Morning ramp-up
+0800=40
+0830=45
+0900=50
+# Evening wind-down
+1700=62
+1800=55
+1900=45
 ```
 
 ## Logs & Diagnostics

@@ -13,29 +13,55 @@ EXTERNAL_DISPLAY="HDMI-A-1"
 if [[ ! -f "$CONFIG_FILE" ]]; then
     mkdir -p "$(dirname "$CONFIG_FILE")"
     cat << 'EOF' > "$CONFIG_FILE"
+# Night (00:00 - 05:00)
 0000=15
+0100=15
+0200=15
+0300=15
+0400=15
 0500=15
-0530=20
-0600=26
-0630=32
-0700=38
-0730=43
-0800=49
-0830=54
-0900=60
-1700=56
-1730=53
-1800=49
-1830=45
-1900=41
-1930=38
-2000=34
+# Early Morning (05:00 - 08:00)
+0530=18
+0600=22
+0630=26
+0700=30
+0730=35
+0800=40
+# Morning (08:00 - 12:00)
+0830=45
+0900=50
+0930=55
+1000=60
+1030=65
+1100=70
+1130=75
+1200=80
+# Afternoon (12:00 - 17:00)
+1230=80
+1300=78
+1330=76
+1400=74
+1430=72
+1500=70
+1530=68
+1600=66
+1630=64
+1700=62
+# Evening (17:00 - 22:00)
+1730=60
+1800=55
+1830=50
+1900=45
+1930=40
+2000=35
 2030=30
 2100=26
 2130=23
-2200=19
-2230=15
-2300=15
+2200=20
+# Late Night (22:00 - 00:00)
+2230=18
+2300=16
+2330=15
 EOF
 fi
 
@@ -61,30 +87,40 @@ done < "$CONFIG_FILE"
 
 # Adaptive Learning: Check for recent manual adjustments
 if command -v brightnessctl &> /dev/null; then
-    # Calculate current brightness percentage
-    CURRENT_PERCENT=$(brightnessctl -m | cut -d, -f4 | tr -d '%')
-    
+    # Get current brightness percentage (round to integer)
+    RAW_PERCENT=$(brightnessctl -m | cut -d, -f4 | tr -d '%')
+    CURRENT_PERCENT=$(printf "%.0f" "$RAW_PERCENT" 2>/dev/null || echo "$RAW_PERCENT")
+
     if [[ -f "$STATE_FILE" ]]; then
         LAST_SET_PERCENT=$(cat "$STATE_FILE")
         # Find absolute difference (abs)
         DIFF=$(( CURRENT_PERCENT - LAST_SET_PERCENT ))
         DIFF=${DIFF#-}
-        
-        # If user manually adjusted brightness beyond a 2% rounding margin
-        if (( DIFF > 2 )); then
+
+        # If user manually adjusted brightness beyond a 5% margin (accounts for hardware granularity)
+        if (( DIFF > 5 )); then
             # We assume user knows best. Set target to what user manually chose.
             TARGET_PERCENT=$CURRENT_PERCENT
-            
+
             # Update the configuration file permanently for the current active profile block!
             sed -i "s/^${CURRENT_PROFILE_TIME}=.*/${CURRENT_PROFILE_TIME}=${CURRENT_PERCENT}/" "$CONFIG_FILE"
             echo "[$(date '+%Y-%m-%d %H:%M')] Learned new manual preference: ${CURRENT_PERCENT}% for profile ${CURRENT_PROFILE_TIME}" >> "$LOGFILE"
+            
+            # Apply the user's preferred brightness
+            brightnessctl -q set "${TARGET_PERCENT}%"
+        else
+            # Apply the profile brightness only if it differs from current
+            if (( TARGET_PERCENT != CURRENT_PERCENT )); then
+                brightnessctl -q set "${TARGET_PERCENT}%"
+            fi
         fi
+    else
+        # First run - just apply the profile brightness
+        brightnessctl -q set "${TARGET_PERCENT}%"
     fi
 
-    # Apply the brightness
-    brightnessctl -q set "${TARGET_PERCENT}%"
-    echo "[$(date '+%Y-%m-%d %H:%M')] Laptop: ${TARGET_PERCENT}%" >> "$LOGFILE"
-    
+    echo "[$(date '+%Y-%m-%d %H:%M')] Laptop: ${TARGET_PERCENT}% (was: ${CURRENT_PERCENT:-unknown})" >> "$LOGFILE"
+
     # Save what we explicitly set to compare against next time
     echo "$TARGET_PERCENT" > "$STATE_FILE"
 fi

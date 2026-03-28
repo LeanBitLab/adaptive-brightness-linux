@@ -7,3 +7,8 @@
 
 # Local configuration
 profiles.conf
+.antigravityignore
+
+# AI/Editor configs
+GEMINI.md
+.qwen/
