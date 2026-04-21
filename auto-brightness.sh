@@ -88,8 +88,7 @@ done < "$CONFIG_FILE"
 # Adaptive Learning: Check for recent manual adjustments
 if command -v brightnessctl &> /dev/null; then
     # Get current brightness percentage (round to integer)
-    RAW_PERCENT=$(brightnessctl -m | cut -d, -f4 | tr -d '%')
-    CURRENT_PERCENT=$(printf "%.0f" "$RAW_PERCENT" 2>/dev/null || echo "$RAW_PERCENT")
+    CURRENT_PERCENT=$(brightnessctl -m | awk -F, '{sub("%", "", $4); printf "%.0f\n", $4}')
 
     if [[ -f "$STATE_FILE" ]]; then
         read -r LAST_SET_PERCENT < "$STATE_FILE"
