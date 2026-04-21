@@ -92,7 +92,7 @@ if command -v brightnessctl &> /dev/null; then
     CURRENT_PERCENT=$(printf "%.0f" "$RAW_PERCENT" 2>/dev/null || echo "$RAW_PERCENT")
 
     if [[ -f "$STATE_FILE" ]]; then
-        LAST_SET_PERCENT=$(cat "$STATE_FILE")
+        read -r LAST_SET_PERCENT < "$STATE_FILE"
         # Find absolute difference (abs)
         DIFF=$(( CURRENT_PERCENT - LAST_SET_PERCENT ))
         DIFF=${DIFF#-}
