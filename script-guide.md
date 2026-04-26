@@ -15,15 +15,16 @@ The system consists of three main components:
 The primary innovation in this script is its ability to "learn" from you natively. Here is the step-by-step logic map of how it detects a manual change:
 
 ### 1. State Retention
-Whenever the script natively applies a brightness value (e.g., `45%`), it saves that literal number into a microscopic cache file at `~/.local/state/auto-brightness.state`. It assumes this is the currently applied value until it is run again.
+Whenever the script natively applies a brightness value (e.g., `45%`), it saves that value along with the current **Unix Epoch Timestamp** into a microscopic cache file at `~/.local/state/auto-brightness.state`. This allows the script to know exactly *when* the last update occurred.
 
-### 2. Difference Calculation
+### 2. Difference & Staleness Calculation
 15 minutes later, the `systemd` timer executes the script again.
-Before the script blindly applies the *next* scheduled brightness to your monitor, it first checks the **current, actual brightness of your monitor** using `brightnessctl -m`.
+Before the script blindly applies the *next* scheduled brightness, it performs two checks:
+1.  **Staleness Check**: It compares the current time with the timestamp in the *State Cache*. If more than **20 minutes** have passed (e.g., the laptop was powered off or suspended), the script ignores any manual adjustments to prevent "false learning" from stale data.
+2.  **Difference Check**: If the cache is fresh, it compares the *Actual Brightness* (from `brightnessctl -m`) with the *State Cache*.
 
-It compares the *Actual Brightness* with the *State Cache*.
-*   If `Actual == Cache`, then no one touched it. The script proceeds to apply the scheduled config.
-*   If `Actual != Cache` (with a >5% margin to avoid hardware rounding errors), **the script mathematically concludes that the User changed the brightness slider manually.**
+*   If `Actual == Cache`, no intervention detected.
+*   If `Actual != Cache` (with a >5% margin) **AND the cache is fresh**, the script mathematically concludes the User changed the brightness manually and triggers learning.
 
 ### 3. Profile Injection
 When it detects user intervention, it intercepts the regular schedule! It pulls your newly modified screen percentage and dynamically rewrites the configuration for the active time block in `profiles.conf`.
