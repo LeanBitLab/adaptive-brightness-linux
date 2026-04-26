@@ -7,6 +7,7 @@ A lightweight, intelligent auto-brightness script for Linux that automatically a
 ## How It Works
 - **Time-Based Profiles:** By default, brightness smoothly ramps up during sunrise, peaks during the day, and gracefully ramps down during sunset into the night.
 - **Adaptive Learning:** The script runs in the background. If you manually change your screen brightness using your keyboard or desktop environment slider, the script detects your intervention using mathematical comparisons. It then **permanently saves** your newly preferred brightness to the currently active time block's profile!
+- **Intelligent Verification:** Smart enough to distinguish between a manual adjustment and a system reboot or long sleep gap, ensuring your profiles aren't accidentally overwritten with stale data.
 - **Granular Control:** Profiles run in 15-30 minute intervals, providing continuous, smooth transitions without shocking your eyes.
 - **Hardware Agnostic:** Communicates directly with the Linux kernel's `/sys/class/backlight` using `brightnessctl`, which means it works seamlessly on GNOME, KDE Plasma, XFCE, Sway, Hyprland, and other window managers.
 
