@@ -86,18 +86,25 @@ while IFS='=' read -r pt pv || [ -n "$pt" ]; do
 done < "$CONFIG_FILE"
 
 # Adaptive Learning: Check for recent manual adjustments
+# Max age (seconds) for state file to be considered fresh (20 min)
+STATE_MAX_AGE=1200
+
 if command -v brightnessctl &> /dev/null; then
     # Get current brightness percentage (round to integer)
     CURRENT_PERCENT=$(brightnessctl -m | awk -F, '{sub("%", "", $4); printf "%.0f\n", $4}')
+    NOW_EPOCH=$(date +%s)
 
     if [[ -f "$STATE_FILE" ]]; then
-        read -r LAST_SET_PERCENT < "$STATE_FILE"
+        read -r LAST_SET_PERCENT LAST_EPOCH < "$STATE_FILE"
+        # Determine if state file is fresh enough for learning
+        STATE_AGE=$(( NOW_EPOCH - ${LAST_EPOCH:-0} ))
+
         # Find absolute difference (abs)
         DIFF=$(( CURRENT_PERCENT - LAST_SET_PERCENT ))
         DIFF=${DIFF#-}
 
-        # If user manually adjusted brightness beyond a 5% margin (accounts for hardware granularity)
-        if (( DIFF > 5 )); then
+        # Only learn if state is fresh (script ran recently) AND user adjusted beyond 5% margin
+        if (( STATE_AGE <= STATE_MAX_AGE && DIFF > 5 )); then
             # We assume user knows best. Set target to what user manually chose.
             TARGET_PERCENT=$CURRENT_PERCENT
 
@@ -120,8 +127,8 @@ if command -v brightnessctl &> /dev/null; then
 
     echo "[$(date '+%Y-%m-%d %H:%M')] Laptop: ${TARGET_PERCENT}% (was: ${CURRENT_PERCENT:-unknown})" >> "$LOGFILE"
 
-    # Save what we explicitly set to compare against next time
-    echo "$TARGET_PERCENT" > "$STATE_FILE"
+    # Save what we explicitly set, along with current epoch for staleness check
+    echo "$TARGET_PERCENT $NOW_EPOCH" > "$STATE_FILE"
 fi
 
 # Keep log file small (last 100 lines)

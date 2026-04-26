@@ -11,4 +11,7 @@ profiles.conf
 
 # AI/Editor configs
 GEMINI.md
+GEMINI.original.md
+QWEN.md
 .qwen/
+.geminiignore
