@@ -72,7 +72,7 @@ assert_target() {
     bash ./auto-brightness.sh
 
     if [ -f "$STATE_FILE" ]; then
-        local actual=$(cat "$STATE_FILE")
+        read -r actual _ < "$STATE_FILE"
         if [ "$actual" == "$expected" ]; then
             echo "✅ Time $time_val -> Target $actual (Expected: $expected)"
         else
