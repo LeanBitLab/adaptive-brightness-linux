@@ -91,7 +91,9 @@ STATE_MAX_AGE=1200
 
 if command -v brightnessctl &> /dev/null; then
     # Get current brightness percentage (round to integer)
-    CURRENT_PERCENT=$(brightnessctl -m | awk -F, '{sub("%", "", $4); printf "%.0f\n", $4}')
+    bctl_out=$(brightnessctl -m)
+    IFS=',' read -r _ _ _ pct _ <<< "$bctl_out"
+    CURRENT_PERCENT="${pct%\%}"
     NOW_EPOCH=$(date +%s)
 
     if [[ -f "$STATE_FILE" ]]; then

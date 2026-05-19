@@ -64,7 +64,9 @@ setup_case() {
 1300=78
 CONF
 
-    echo "${state_pct}" > "$STATE_FILE"
+    # Provide a recent epoch timestamp in the state file so the learning
+    # logic considers the state file "fresh" and proceeds with config updates.
+    echo "${state_pct} $(date +%s)" > "$STATE_FILE"
     export MOCK_CURRENT_PERCENT="${current_pct}"
     rm -f "$MOCK_BRIGHTNESS_LOG"
 }
@@ -93,7 +95,8 @@ else
     exit 1
 fi
 
-if [ "$(cat "$STATE_FILE")" = "80" ]; then
+read -r state_pct _ < "$STATE_FILE"
+if [ "$state_pct" = "80" ]; then
     echo "✅ State file updated with original profile brightness (Correct behavior)"
 else
     echo "❌ State file INCORRECT"
@@ -125,7 +128,8 @@ else
     exit 1
 fi
 
-if [ "$(cat "$STATE_FILE")" = "70" ]; then
+read -r state_pct _ < "$STATE_FILE"
+if [ "$state_pct" = "70" ]; then
     echo "✅ State file updated with user's manual preference (Correct behavior)"
 else
     echo "❌ State file INCORRECT"
