@@ -9,13 +9,20 @@ mkdir -p "$HOME/.config/systemd/user"
 mkdir -p "$HOME/.config/auto-brightness"
 mkdir -p "$HOME/.local/state"
 
-# Copy the script
+# Copy the script and GUI
 cp auto-brightness.sh "$HOME/.local/bin/"
 chmod +x "$HOME/.local/bin/auto-brightness.sh"
+cp gui.py "$HOME/.local/bin/auto-brightness-gui"
+chmod +x "$HOME/.local/bin/auto-brightness-gui"
 
 # Copy systemd units
 cp auto-brightness.service "$HOME/.config/systemd/user/"
 cp auto-brightness.timer "$HOME/.config/systemd/user/"
+
+# Install desktop entry for menu launchers
+mkdir -p "$HOME/.local/share/applications"
+cp auto-brightness-gui.desktop "$HOME/.local/share/applications/"
+update-desktop-database "$HOME/.local/share/applications/" &>/dev/null || true
 
 # Reload systemd and enable timer
 systemctl --user daemon-reload
@@ -24,3 +31,4 @@ systemctl --user start auto-brightness.service
 
 echo "Installation complete!"
 echo "The script will run every 15 minutes and automatically learn your manual brightness changes."
+echo "You can launch the GUI control panel via application menu ('Adaptive Brightness') or command 'auto-brightness-gui'."

@@ -38,6 +38,22 @@ chmod +x install.sh
 ./install.sh
 ```
 
+## Graphic Control Panel (GUI)
+The project includes a premium, dark-mode native desktop control panel built with **PySide6**.
+
+### Features:
+- **Interactive Spline Curve:** Displays a custom-drawn, smooth 24-hour visual representation of your active brightness profile with a real-time current time indicator.
+- **Manual Override Slider:** Adjust your screen brightness instantly.
+- **Profile List Editor:** Visual list of time blocks, each with a slider/input to easily configure target levels.
+- **Real-Time Logs:** A syntax-highlighted activity logs screen to monitor actions and learning events.
+- **System Tray Integration:** Minimizes into the system tray so it runs silently in the background with quick access menus.
+- **Launcher Integration:** Standard XDG desktop file installs into your system menu (e.g. search "Adaptive Brightness" in KDE).
+
+To run the GUI directly from the terminal:
+```bash
+auto-brightness-gui
+```
+
 ## Configuration
 The installation creates a configuration file where it stores your learned profiles. You can explicitly manually edit it at:
 `~/.config/auto-brightness/profiles.conf`

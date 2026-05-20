@@ -72,8 +72,11 @@ assert_dir "$HOME/.local/state"
 # 2. Check files
 assert_file "$HOME/.local/bin/auto-brightness.sh"
 assert_exec "$HOME/.local/bin/auto-brightness.sh"
+assert_file "$HOME/.local/bin/auto-brightness-gui"
+assert_exec "$HOME/.local/bin/auto-brightness-gui"
 assert_file "$HOME/.config/systemd/user/auto-brightness.service"
 assert_file "$HOME/.config/systemd/user/auto-brightness.timer"
+assert_file "$HOME/.local/share/applications/auto-brightness-gui.desktop"
 
 # 3. Check systemctl calls
 if grep -q "systemctl --user daemon-reload" "$MOCK_SYSTEMCTL_LOG" && \
