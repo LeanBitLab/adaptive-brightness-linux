@@ -40,6 +40,19 @@ fi
 EOF
 chmod +x "$TEST_HOME/mock-bin/brightnessctl"
 
+# Mock qdbus and qdbus6 to return failure so tests use the brightnessctl fallback
+cat << 'EOF' > "$TEST_HOME/mock-bin/qdbus"
+#!/bin/bash
+exit 1
+EOF
+chmod +x "$TEST_HOME/mock-bin/qdbus"
+
+cat << 'EOF' > "$TEST_HOME/mock-bin/qdbus6"
+#!/bin/bash
+exit 1
+EOF
+chmod +x "$TEST_HOME/mock-bin/qdbus6"
+
 export PATH="$TEST_HOME/mock-bin:$PATH"
 
 # Setup directories

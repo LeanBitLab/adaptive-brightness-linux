@@ -84,6 +84,30 @@ while IFS='=' read -r pt pv || [ -n "$pt" ]; do
         CURRENT_PROFILE_TIME=$pt
     fi
 done < "$CONFIG_FILE"
+# Helper to set brightness (supports KDE D-Bus for syncing slider, fallbacks to brightnessctl)
+set_brightness() {
+    local pct="$1"
+    local dbus_cmd=""
+
+    if command -v qdbus6 &> /dev/null; then
+        dbus_cmd="qdbus6"
+    elif command -v qdbus &> /dev/null; then
+        dbus_cmd="qdbus"
+    fi
+
+    # Try setting via KDE PowerDevil D-Bus interface so the status/slider updates
+    if [[ -n "$dbus_cmd" ]] && $dbus_cmd org.kde.Solid.PowerManagement /org/kde/Solid/PowerManagement/Actions/BrightnessControl &> /dev/null; then
+        local val=$(( pct * 100 ))
+        if $dbus_cmd org.kde.Solid.PowerManagement /org/kde/Solid/PowerManagement/Actions/BrightnessControl org.kde.Solid.PowerManagement.Actions.BrightnessControl.setBrightnessSilent "$val" &> /dev/null; then
+            return 0
+        fi
+    fi
+
+    # Fallback to direct hardware control via brightnessctl
+    if command -v brightnessctl &> /dev/null; then
+        brightnessctl -q set "${pct}%"
+    fi
+}
 
 # Adaptive Learning: Check for recent manual adjustments
 # Max age (seconds) for state file to be considered fresh (20 min)
@@ -115,16 +139,16 @@ if command -v brightnessctl &> /dev/null; then
             echo "[$(date '+%Y-%m-%d %H:%M')] Learned new manual preference: ${CURRENT_PERCENT}% for profile ${CURRENT_PROFILE_TIME}" >> "$LOGFILE"
             
             # Apply the user's preferred brightness
-            brightnessctl -q set "${TARGET_PERCENT}%"
+            set_brightness "$TARGET_PERCENT"
         else
             # Apply the profile brightness only if it differs from current
             if (( TARGET_PERCENT != CURRENT_PERCENT )); then
-                brightnessctl -q set "${TARGET_PERCENT}%"
+                set_brightness "$TARGET_PERCENT"
             fi
         fi
     else
         # First run - just apply the profile brightness
-        brightnessctl -q set "${TARGET_PERCENT}%"
+        set_brightness "$TARGET_PERCENT"
     fi
 
     echo "[$(date '+%Y-%m-%d %H:%M')] Laptop: ${TARGET_PERCENT}% (was: ${CURRENT_PERCENT:-unknown})" >> "$LOGFILE"

@@ -36,6 +36,19 @@ fi
 INNER_EOF
 chmod +x "$TEST_HOME/mock-bin/brightnessctl"
 
+# Mock qdbus and qdbus6 to return failure so tests use the brightnessctl fallback
+cat << 'INNER_EOF' > "$TEST_HOME/mock-bin/qdbus"
+#!/bin/bash
+exit 1
+INNER_EOF
+chmod +x "$TEST_HOME/mock-bin/qdbus"
+
+cat << 'INNER_EOF' > "$TEST_HOME/mock-bin/qdbus6"
+#!/bin/bash
+exit 1
+INNER_EOF
+chmod +x "$TEST_HOME/mock-bin/qdbus6"
+
 # Create config
 mkdir -p "$HOME/.config/auto-brightness"
 mkdir -p "$HOME/.local/state"

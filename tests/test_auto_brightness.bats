@@ -31,6 +31,19 @@ elif [[ "$1" == "-q" && "$2" == "set" ]]; then
 fi
 MOCK_EOF
     chmod +x "$TEST_TEMP_DIR/bin/brightnessctl"
+
+    # Mock 'qdbus' and 'qdbus6' commands to ensure test isolation
+    cat << 'MOCK_EOF' > "$TEST_TEMP_DIR/bin/qdbus"
+#!/bin/bash
+exit 1
+MOCK_EOF
+    chmod +x "$TEST_TEMP_DIR/bin/qdbus"
+
+    cat << 'MOCK_EOF' > "$TEST_TEMP_DIR/bin/qdbus6"
+#!/bin/bash
+exit 1
+MOCK_EOF
+    chmod +x "$TEST_TEMP_DIR/bin/qdbus6"
 }
 
 teardown() {
