@@ -345,7 +345,7 @@ class ProfileCurveWidget(QWidget):
         fill_path = QPainterPath(path)
         fill_path.lineTo(x_end, margin_top + graph_h)
         fill_path.lineTo(margin_left, margin_top + graph_h)
-        fill_path.close()
+        fill_path.closeSubpath()
         
         gradient = QLinearGradient(0, margin_top, 0, margin_top + graph_h)
         gradient.setColorAt(0.0, QColor(59, 130, 246, 120))  # Slate Blue glow
