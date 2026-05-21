@@ -261,7 +261,7 @@ QCheckBox::indicator:hover {
 QCheckBox::indicator:checked {
     background-color: #f0a820;
     border-color: #f0a820;
-    image: url(data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="12px" height="12px"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>);
+    image: url('/home/arjun/.config/auto-brightness/checkbox_check.svg');
 }
 QTextEdit[class="LogBox"] {
     background-color: #0d0d14;
@@ -796,18 +796,25 @@ class BrightnessGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         
-        # Ensure drop-down arrow SVG exists for custom QSS loading
+        # Ensure custom UI SVGs exist for custom QSS loading
         try:
             os.makedirs(CONFIG_DIR, exist_ok=True)
             arrow_path = os.path.join(CONFIG_DIR, "down_arrow.svg")
             with open(arrow_path, "w") as f:
                 f.write('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#f0a820" d="M7 10l5 5 5-5z"/></svg>')
+                
+            check_path = os.path.join(CONFIG_DIR, "checkbox_check.svg")
+            with open(check_path, "w") as f:
+                f.write('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12"><path fill="black" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>')
         except Exception:
             pass
             
         self.setWindowTitle("Adaptive Brightness")
         self.resize(880, 680)
-        self.setStyleSheet(QSS)
+        
+        # Dynamically evaluate QSS home folder path
+        real_qss = QSS.replace("/home/arjun", os.path.expanduser("~"))
+        self.setStyleSheet(real_qss)
         self.setWindowIcon(create_sun_icon(64))
         
         self.profiles = {}
