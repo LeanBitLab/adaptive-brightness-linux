@@ -32,8 +32,14 @@ chmod +x "$TEST_HOME/mock-bin/date"
 export MOCK_BRIGHTNESS_LOG="$TEST_HOME/brightness_calls.log"
 cat << 'EOF' > "$TEST_HOME/mock-bin/brightnessctl"
 #!/bin/bash
-if [ "$1" = "-m" ]; then
-    echo "intel_backlight,backlight,100,${MOCK_CURRENT_PERCENT}%,200"
+has_m=0
+for arg in "$@"; do
+    if [ "$arg" = "-m" ]; then
+        has_m=1
+    fi
+done
+if [ "$has_m" = "1" ]; then
+    echo "testdev,backlight,100,${MOCK_CURRENT_PERCENT}%,200"
 else
     echo "brightnessctl $*" >> "$MOCK_BRIGHTNESS_LOG"
 fi
@@ -52,6 +58,18 @@ cat << 'EOF' > "$TEST_HOME/mock-bin/qdbus6"
 exit 1
 EOF
 chmod +x "$TEST_HOME/mock-bin/qdbus6"
+
+# Mock kscreen-doctor to output a controlled test device name
+cat << 'EOF' > "$TEST_HOME/mock-bin/kscreen-doctor"
+#!/bin/bash
+if [[ "$1" == "-o" ]]; then
+    echo "Output: 1 testdev"
+    echo "    Enabled"
+else
+    exit 1
+fi
+EOF
+chmod +x "$TEST_HOME/mock-bin/kscreen-doctor"
 
 export PATH="$TEST_HOME/mock-bin:$PATH"
 
@@ -77,9 +95,9 @@ setup_case() {
 1300=78
 CONF
 
-    # Provide a recent epoch timestamp in the state file so the learning
-    # logic considers the state file "fresh" and proceeds with config updates.
-    echo "${state_pct} $(date +%s)" > "$STATE_FILE"
+    # Script uses per-device state files; write to testdev device state
+    DEV_STATE_FILE="$HOME/.local/state/auto-brightness.testdev.state"
+    echo "${state_pct} $(date +%s)" > "$DEV_STATE_FILE"
     export MOCK_CURRENT_PERCENT="${current_pct}"
     rm -f "$MOCK_BRIGHTNESS_LOG"
 }
@@ -100,7 +118,7 @@ else
     exit 1
 fi
 
-if grep -q "brightnessctl -q set 80%" "$MOCK_BRIGHTNESS_LOG"; then
+if grep -q -E "brightnessctl( -d [a-zA-Z0-9_-]+)? -q set 80%" "$MOCK_BRIGHTNESS_LOG"; then
     echo "✅ Applied original profile brightness (Correct behavior)"
 else
     echo "❌ Did NOT apply original profile brightness (Incorrect behavior)"
@@ -108,12 +126,13 @@ else
     exit 1
 fi
 
-read -r state_pct _ < "$STATE_FILE"
+DEV_STATE_FILE="$HOME/.local/state/auto-brightness.testdev.state"
+read -r state_pct _ < "$DEV_STATE_FILE"
 if [ "$state_pct" = "80" ]; then
     echo "✅ State file updated with original profile brightness (Correct behavior)"
 else
     echo "❌ State file INCORRECT"
-    cat "$STATE_FILE"
+    cat "$DEV_STATE_FILE"
     exit 1
 fi
 
@@ -133,7 +152,7 @@ else
     exit 1
 fi
 
-if grep -q "brightnessctl -q set 70%" "$MOCK_BRIGHTNESS_LOG"; then
+if grep -q -E "brightnessctl( -d [a-zA-Z0-9_-]+)? -q set 70%" "$MOCK_BRIGHTNESS_LOG"; then
     echo "✅ Applied user's manual preference (Correct behavior)"
 else
     echo "❌ Did NOT apply user's manual preference (Incorrect behavior)"
@@ -141,12 +160,13 @@ else
     exit 1
 fi
 
-read -r state_pct _ < "$STATE_FILE"
+DEV_STATE_FILE="$HOME/.local/state/auto-brightness.testdev.state"
+read -r state_pct _ < "$DEV_STATE_FILE"
 if [ "$state_pct" = "70" ]; then
     echo "✅ State file updated with user's manual preference (Correct behavior)"
 else
     echo "❌ State file INCORRECT"
-    cat "$STATE_FILE"
+    cat "$DEV_STATE_FILE"
     exit 1
 fi
 

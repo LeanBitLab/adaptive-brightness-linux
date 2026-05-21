@@ -21,6 +21,8 @@ cat << 'INNER_EOF' > "$TEST_HOME/mock-bin/date"
 #!/bin/bash
 if [[ "$*" == *"+%H%M"* ]] && [ -n "$MOCK_TIME" ]; then
     echo "$MOCK_TIME"
+elif [[ "$*" == *"+%s"* ]]; then
+    echo "1672531200"
 else
     echo "2023-01-01 12:00"
 fi
@@ -80,12 +82,23 @@ assert_target() {
     local expected=$2
 
     export MOCK_TIME=$time_val
+    # Clean up all per-device state files
+    rm -f "$HOME/.local/state/auto-brightness".*.state
     rm -f "$STATE_FILE"
 
     bash ./auto-brightness.sh
 
-    if [ -f "$STATE_FILE" ]; then
-        read -r actual _ < "$STATE_FILE"
+    # Script now writes per-device state files; check for default device
+    local found_state=""
+    for sf in "$HOME/.local/state/auto-brightness".*.state; do
+        if [ -f "$sf" ]; then
+            found_state="$sf"
+            break
+        fi
+    done
+
+    if [ -n "$found_state" ]; then
+        read -r actual _ < "$found_state"
         if [ "$actual" == "$expected" ]; then
             echo "✅ Time $time_val -> Target $actual (Expected: $expected)"
         else
@@ -99,32 +112,32 @@ assert_target() {
 }
 
 # Run assertions
-# Before first configured time (should use fallback 15)
-assert_target "0500" "15"
+# Before first configured time (interpolates between last and first)
+assert_target "0500" "18"
 
 # Exactly on a time boundary
 assert_target "0600" "20"
 
-# Between boundaries
-assert_target "1000" "45"
+# Between boundaries (interpolates between 08:30 and 12:00)
+assert_target "1000" "60"
 
 # Exactly at peak
 assert_target "1200" "80"
 
-# Afternoon
-assert_target "1500" "80"
+# Afternoon (interpolates between 12:00 and 18:00)
+assert_target "1500" "60"
 
-# Evening
-assert_target "1930" "40"
+# Evening (interpolates between 18:00 and 22:00)
+assert_target "1930" "29"
 
 # Boundary with leading zeros parsing
 assert_target "0830" "45"
 
-# Late night
-assert_target "2230" "10"
+# Late night (interpolates between 22:00 and 23:00)
+assert_target "2230" "7"
 
-# Very late night (last entry, tests the no-newline case)
-assert_target "2359" "5"
+# Very late night (last entry, tests the no-newline case, interpolates to 06:00 wrap)
+assert_target "2359" "7"
 
 if [ $FAILED -eq 1 ]; then
     echo "❌ Some config parsing tests failed!"

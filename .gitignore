@@ -1,17 +1,42 @@
-# Logs
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Caching and testing
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Application logs, state, and temp configuration
 *.log
 *.tmp
-
-# Local State
 *.state
-
-# Local configuration
+*.paused
 profiles.conf
-.antigravityignore
 
-# AI/Editor configs
+# Agent and AI temporary files
+.antigravityignore
+.geminiignore
 GEMINI.md
 GEMINI.original.md
 QWEN.md
 .qwen/
-.geminiignore

@@ -16,9 +16,12 @@ export HOME="$TEST_HOME"
 # Cleanup on exit
 trap 'rm -rf "$TEST_HOME"' EXIT
 
-# Mock 'command' builtin to simulate missing brightnessctl
+# Mock 'command' builtin to simulate missing brightnessctl and kscreen-doctor
 command() {
     if [[ "$1" == "-v" && "$2" == "brightnessctl" ]]; then
+        return 1
+    fi
+    if [[ "$1" == "-v" && "$2" == "kscreen-doctor" ]]; then
         return 1
     fi
     builtin command "$@"
