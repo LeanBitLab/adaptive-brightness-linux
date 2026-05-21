@@ -1,6 +1,6 @@
 # Adaptive Brightness for Linux
 
-A lightweight, intelligent auto-brightness system for Linux that automatically adjusts your screen brightness based on the time of day and **learns from your manual adjustments**, similar to Android's adaptive brightness feature. It comes equipped with a premium, Nothing OS-inspired monochrome desktop GUI control panel built with **PySide6**.
+A lightweight, intelligent auto-brightness system for Linux that automatically adjusts your screen brightness based on the time of day and **learns from your manual adjustments**, similar to Android's adaptive brightness feature. It comes equipped with a premium, minimalist monochrome desktop GUI control panel built with **PySide6**.
 
 **Author**: LeanBitLab
 

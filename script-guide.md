@@ -50,7 +50,7 @@ When a manual adjustment is detected, the core script intercepts the regular sch
 
 ## 🎨 PySide6 Graphical Engine Mechanics
 
-The Nothing OS signature monochrome GUI interacts natively with the system backend:
+The signature minimalist monochrome GUI interacts natively with the system backend:
 
 ### 1. Visual Spline Interpolation
 The GUI features a custom coordinate mapping canvas (`ProfileCurveWidget`). It renders your active profile's `HHMM=PERCENT` dictionary as a series of connected points, interpolated via standard quadratic bezier path drawing:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Adaptive Brightness GUI
-A premium, Nothing OS monochrome signature desktop interface for adaptive-brightness-linux.
+A premium, minimalist monochrome signature desktop interface for adaptive-brightness-linux.
 Built with PySide6 (Qt for Python).
 """
 
@@ -450,7 +450,7 @@ class NoWheelSlider(QSlider):
 
 
 class CircularBrightnessDisplay(QWidget):
-    """Custom-drawn circular progress ring in Nothing OS signature styling."""
+    """Custom-drawn circular progress ring in premium minimalist styling."""
     def __init__(self, parent=None):
         super().__init__(parent)
         self.value = 50
