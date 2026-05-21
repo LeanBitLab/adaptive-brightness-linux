@@ -49,6 +49,9 @@ QTabWidget::panel {
     background-color: #16161e;
     border-radius: 12px;
 }
+QTabWidget > QWidget {
+    background-color: #16161e;
+}
 QTabBar::tab {
     background-color: #0d0d14;
     border: 1px solid #28283a;
