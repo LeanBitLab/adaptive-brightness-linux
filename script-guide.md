@@ -64,7 +64,7 @@ On application startup, `auto-brightness-gui` guarantees that essential custom S
 
 ### 3. Autostart Management
 Instead of forcing manual configuration, the settings checkboxes control XDG autostart desktop entry bindings:
-- **"Start Control Panel on Login"**: Creates a `~/.config/autostart/auto-brightness-gui.desktop` file pointing to `~/.local/bin/auto-brightness-gui`.
+- **"Start Control Panel on Login"**: Creates a `~/.config/autostart/auto-brightness-gui.desktop` file pointing dynamically to the correct executable location (e.g. `/usr/bin/auto-brightness-gui` or `~/.local/bin/auto-brightness-gui`).
 - **"Start Minimized in System Tray"**: appends `--minimized` to the desktop launcher exec line so the control panel boots silently to the system tray on startup.
 
 ---

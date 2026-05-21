@@ -62,7 +62,22 @@ sudo dnf install brightnessctl
 ```
 
 ### Installation
-Clone this repository and run the install script:
+
+#### Option A: Native Debian Package (Recommended for Debian/Ubuntu)
+Compile and install a system-wide package that integrates natively:
+
+1. Build the package:
+   ```bash
+   chmod +x build-deb.sh
+   ./build-deb.sh
+   ```
+2. Install the compiled package:
+   ```bash
+   sudo apt install ./adaptive-brightness_1.0.0_all.deb
+   ```
+
+#### Option B: Local User Script (Universal)
+Clone and run the standard installer to install in user space (`~/.local/bin`):
 
 ```bash
 git clone https://github.com/LeanBitLab/adaptive-brightness-linux.git
@@ -70,7 +85,7 @@ cd adaptive-brightness-linux
 chmod +x install.sh
 ./install.sh
 ```
-*Note: The installer automatically configures your standard XDG desktop launcher, meaning you can search for and launch "Adaptive Brightness" directly from your application launcher or menu drawer.*
+*Note: Both installation methods automatically configure your standard XDG desktop launcher, meaning you can search for and launch "Adaptive Brightness" directly from your application launcher or menu drawer.*
 
 To run the GUI directly from the terminal:
 ```bash
