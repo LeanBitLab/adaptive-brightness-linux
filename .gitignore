@@ -38,5 +38,6 @@ profiles.conf
 .geminiignore
 GEMINI.md
 GEMINI.original.md
-QWEN.md
-.qwen/
+# Packaging and distribution
+dist/
+*.deb

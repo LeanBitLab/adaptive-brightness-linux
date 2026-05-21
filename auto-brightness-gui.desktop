@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Adaptive Brightness
 Comment=Configure and monitor adaptive auto-brightness
-Exec=python3 /home/arjun/.local/bin/auto-brightness-gui
+Exec=auto-brightness-gui
 Icon=video-display
 Terminal=false
 Type=Application

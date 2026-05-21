@@ -32,6 +32,14 @@ CONFIG_FILE = os.path.join(CONFIG_DIR, "profiles.conf")
 STATE_FILE = os.path.expanduser("~/.local/state/auto-brightness.state")
 LOG_FILE = os.path.expanduser("~/.local/state/auto-brightness.log")
 SCRIPT_PATH = os.path.expanduser("~/.local/bin/auto-brightness.sh")
+if not os.path.exists(SCRIPT_PATH):
+    if os.path.exists("/usr/bin/auto-brightness.sh"):
+        SCRIPT_PATH = "/usr/bin/auto-brightness.sh"
+    else:
+        import shutil
+        found_path = shutil.which("auto-brightness.sh")
+        if found_path:
+            SCRIPT_PATH = found_path
 PAUSE_FILE = os.path.expanduser("~/.local/state/auto-brightness.paused")
 
 # Premium dark theme with warm amber accent
@@ -1927,7 +1935,12 @@ class BrightnessGUI(QMainWindow):
         if self.chk_autostart.isChecked():
             try:
                 os.makedirs(autostart_dir, exist_ok=True)
-                bin_path = os.path.expanduser("~/.local/bin/auto-brightness-gui")
+                # Dynamically determine executing binary path, falling back to local or global
+                bin_path = os.path.abspath(sys.argv[0])
+                if not os.path.exists(bin_path) or "gui.py" in bin_path:
+                    bin_path = os.path.expanduser("~/.local/bin/auto-brightness-gui")
+                    if not os.path.exists(bin_path) and os.path.exists("/usr/bin/auto-brightness-gui"):
+                        bin_path = "/usr/bin/auto-brightness-gui"
                 if self.chk_autostart_minimized.isChecked():
                     exec_cmd = f"{bin_path} --minimized"
                 else:
