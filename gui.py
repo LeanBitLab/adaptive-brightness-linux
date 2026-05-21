@@ -165,14 +165,14 @@ QComboBox QAbstractItemView::item:selected {
 }
 QLabel[class="Title"] {
     font-family: 'Segoe UI', 'Inter', 'Roboto', sans-serif;
-    font-size: 40px;
+    font-size: 24px;
     font-weight: 900;
     color: #ececee;
     background-color: #16161e;
     border: 1px solid #28283a;
-    border-radius: 10px;
-    padding: 6px 18px;
-    letter-spacing: 2px;
+    border-radius: 8px;
+    padding: 4px 12px;
+    letter-spacing: 1px;
 }
 QLabel[class="Subtitle"] {
     font-size: 14px;
@@ -874,7 +874,7 @@ class BrightnessGUI(QMainWindow):
         self.active_badge.setText("☀ BRIGHTNESS ACTIVE")
         self.active_badge.setStyleSheet(
             "background-color: #16161e; color: #88889a; font-weight: 700; "
-            "border: 1px solid #28283a; padding: 6px 14px; border-radius: 14px; font-size: 10px; letter-spacing: 1.5px;"
+            "border: 1px solid #28283a; padding: 4px 10px; border-radius: 10px; font-size: 10px; letter-spacing: 1.5px;"
         )
         header_layout.addWidget(self.active_badge)
         main_layout.addLayout(header_layout)
@@ -1170,7 +1170,7 @@ class BrightnessGUI(QMainWindow):
         
         self.chk_autostart_minimized = QCheckBox("Start Minimized in System Tray")
         self.chk_autostart_minimized.toggled.connect(self.toggle_autostart_minimized)
-        self.chk_autostart_minimized.setStyleSheet("color: #88889a; font-weight: 700; font-size: 11px; letter-spacing: 1px; margin-left: 20px;")
+        self.chk_autostart_minimized.setStyleSheet("color: #88889a; font-weight: 700; font-size: 11px; letter-spacing: 1px;")
         
         bottom_ctrls.addWidget(self.chk_ambient)
         bottom_ctrls.addWidget(self.chk_autostart)
