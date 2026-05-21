@@ -46,12 +46,12 @@ QWidget {
 }
 QTabWidget::pane {
     border: 1px solid #28283a;
-    background-color: #16161e;
+    background-color: #1e1e2a;
     border-radius: 12px;
     top: -1px;
 }
 #tab_dashboard, #tab_profile, #tab_logs {
-    background-color: #16161e;
+    background-color: #1e1e2a;
 }
 QTabBar::tab {
     background-color: #0d0d14;
@@ -67,15 +67,15 @@ QTabBar::tab {
     letter-spacing: 1px;
 }
 QTabBar::tab:selected {
-    background-color: #16161e;
+    background-color: #1e1e2a;
     color: #ececee;
     border-color: #28283a;
-    border-bottom-color: #16161e;
+    border-bottom-color: #1e1e2a;
     margin-bottom: -2px;
     padding-bottom: 12px;
 }
 QTabBar::tab:hover:!selected {
-    background-color: #1e1e2a;
+    background-color: #16161e;
     color: #ececee;
     border-color: #3a3a4e;
 }
