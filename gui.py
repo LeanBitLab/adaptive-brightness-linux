@@ -63,7 +63,7 @@ QTabBar::tab {
     letter-spacing: 1px;
 }
 QTabBar::tab:selected {
-    background-color: #16161e;
+    background-color: #28283a;
     color: #ececee;
     border-color: #28283a;
 }
