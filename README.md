@@ -1,18 +1,36 @@
 # Adaptive Brightness for Linux
 
-A lightweight, intelligent auto-brightness system for Linux that automatically adjusts your screen brightness based on the time of day and **learns from your manual adjustments**, similar to Android's adaptive brightness feature. It comes equipped with a premium, minimalist monochrome desktop GUI control panel built with **PySide6**.
+[![Version](https://img.shields.io/github/v/release/LeanBitLab/adaptive-brightness-linux?style=for-the-badge&color=f0a820&label=Version)](https://github.com/LeanBitLab/adaptive-brightness-linux/releases/latest) [![Downloads](https://img.shields.io/github/downloads/LeanBitLab/adaptive-brightness-linux/total?style=for-the-badge&color=f0a820&label=Downloads)](https://github.com/LeanBitLab/adaptive-brightness-linux/releases) [![Stars](https://img.shields.io/github/stars/LeanBitLab/adaptive-brightness-linux?style=for-the-badge&color=f0a820)](https://github.com/LeanBitLab/adaptive-brightness-linux/stargazers)
 
-**Author**: LeanBitLab
+**Adaptive Brightness for Linux** is a lightweight, intelligent auto-brightness system for Linux that automatically adjusts your screen brightness based on the time of day and **learns from your manual adjustments**, similar to Android's adaptive brightness feature. It comes equipped with a premium, minimalist monochrome desktop GUI control panel built with **PySide6**.
+
+This customized version introduces usability enhancements and some UX improvements by [LeanBitLab](https://github.com/LeanBitLab).
+
+<a href="https://github.com/LeanBitLab/adaptive-brightness-linux/releases/latest">
+  <img alt="Get it on GitHub" src="https://raw.githubusercontent.com/rubenpgrady/get-it-on-github/refs/heads/main/get-it-on-github.png" height="50">
+</a>
 
 ---
 
-## 🎨 Premium Graphic Control Panel (GUI)
+## 🎨 Screenshots
 
-The control panel features a signature minimalist monochrome design.
+<table>
+  <tr>
+    <td align="center"><b>Dashboard View</b></td>
+    <td align="center"><b>Profile Editor View</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/1.png" width="100%" alt="Dashboard View"/></td>
+    <td><img src="docs/screenshots/2.png" width="100%" alt="Profile Editor View"/></td>
+  </tr>
+</table>
 
-### Core Features:
-- **📈 Interactive Spline Curve Graph**: Draws a custom-drawn, smooth 24-hour visual representation of your active brightness profile with draggable coordinate nodes to adjust target levels in real time.
-- **☀️ Circular Brightness Dial & Manual Override**: Visual dial showing current brightness, with manual overrides that seamlessly disable auto mode temporarily.
+---
+
+## 🚀 Key Features & Enhancements
+
+- **📈 Interactive Spline Curve Graph** - Draws a custom-drawn, smooth 24-hour visual representation of your active brightness profile with draggable coordinate nodes to adjust target levels in real time.
+- **☀️ Circular Brightness Dial & Manual Override** - Visual dial showing current brightness, with manual overrides that seamlessly disable auto mode temporarily.
 - **⚙️ System Control Center**:
   - **Disable / Enable Timer**: Instantly control the background `systemd` daemon check timer.
   - **Adjust Now**: Snaps the screen to the active profile target level.
@@ -20,11 +38,11 @@ The control panel features a signature minimalist monochrome design.
   - **Reset Overrides**: Clears any active manual offsets, restoring normal profile curve snap.
   - **Force Learn**: Save the current manual override level immediately into the active time block.
   - **Restore Defaults**: Instantly resets curves to factory-calibrated defaults.
-- **⏸️ Advanced Pause controls**: Pause adjustments for `1h`, `3h`, `8h`, or `Indefinitely` with an elegant live countdown panel.
+- **⏸️ Advanced Pause controls** - Pause adjustments for `1h`, `3h`, `8h`, or `Indefinitely` with an elegant live countdown panel.
 - **✍️ Visual Profile Editor**:
   - **Dynamic Time Blocks**: Add or delete time blocks, adjust brightness sliders, or double-click to input exact spinbox percentages.
   - **Interactive Time Setting**: Direct manual `QTimeEdit` boxes to change time block schedules dynamically.
-- **📋 Real-Time Logging**: Built-in syntax-highlighted activity logs screen to monitor system events and learning metrics.
+- **📋 Real-Time Logging** - Built-in syntax-highlighted activity logs screen to monitor system events and learning metrics.
 - **📥 System Tray & Autostart Integration**:
   - Minimizes silently to the system tray with standard right-click quick menus.
   - **Dual-Checkbox Setup**: Configure "Start Control Panel on Login" and/or "Start Minimized in System Tray" directly via simple UI checkboxes.
@@ -41,7 +59,7 @@ The control panel features a signature minimalist monochrome design.
 
 ---
 
-## 🚀 Prerequisites & Installation
+## 📦 Prerequisites & Installation
 
 ### Prerequisites
 - `bash` (Default on almost all distros)
@@ -107,3 +125,9 @@ The system stores your configurations and states in standard user directories:
 ## 📚 Advanced Architecture & Customization
 Curious about how the mathematical adaptive learning model evaluates delta differences under the hood, or how to customize the core shell script execution?
 👉 **[Read the Full Architecture & Customization Guide here](script-guide.md)**
+
+---
+
+## 🛡️ LeanBitLab Ecosystem
+
+Check out our other projects: 👉 [LeanBitLab Projects](https://github.com/LeanBitLab#-current-projects)
