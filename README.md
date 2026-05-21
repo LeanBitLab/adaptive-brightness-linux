@@ -1,14 +1,16 @@
-# Adaptive Brightness for Linux
+# LTvBrightness
 
-[![Version](https://img.shields.io/github/v/release/LeanBitLab/adaptive-brightness-linux?style=for-the-badge&color=f0a820&label=Version)](https://github.com/LeanBitLab/adaptive-brightness-linux/releases/latest) [![Downloads](https://img.shields.io/github/downloads/LeanBitLab/adaptive-brightness-linux/total?style=for-the-badge&color=f0a820&label=Downloads)](https://github.com/LeanBitLab/adaptive-brightness-linux/releases) [![Stars](https://img.shields.io/github/stars/LeanBitLab/adaptive-brightness-linux?style=for-the-badge&color=f0a820)](https://github.com/LeanBitLab/adaptive-brightness-linux/stargazers)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/banner_dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/banner_light.svg">
+  <img alt="LTvBrightness Banner" src="assets/banner_light.svg">
+</picture>
 
-**Adaptive Brightness for Linux** is a lightweight, intelligent auto-brightness system for Linux that automatically adjusts your screen brightness based on the time of day and **learns from your manual adjustments**, similar to Android's adaptive brightness feature. It comes equipped with a premium, minimalist monochrome desktop GUI control panel built with **PySide6**.
+[![Version](https://img.shields.io/github/v/release/LeanBitLab/adaptive-brightness-linux?style=for-the-badge&color=f0a820&label=Version)](https://github.com/LeanBitLab/adaptive-brightness-linux/releases/latest) [![Downloads](https://img.shields.io/github/downloads/LeanBitLab/adaptive-brightness-linux/total?style=for-the-badge&color=f0a820&label=Downloads)](https://github.com/LeanBitLab/adaptive-brightness-linux/releases) [![Stars](https://img.shields.io/github/stars/LeanBitLab/adaptive-brightness-linux?style=for-the-badge&color=f0a820)](https://github.com/LeanBitLab/adaptive-brightness-linux/stargazers) [![Sponsor](https://img.shields.io/badge/Sponsor-LeanBitLab?style=for-the-badge&logo=github-sponsors&color=f0a820)](https://github.com/sponsors/LeanBitLab)
 
-This customized version introduces usability enhancements and some UX improvements by [LeanBitLab](https://github.com/LeanBitLab).
+**LTvBrightness** (adaptive-brightness-linux) is a lightweight, intelligent auto-brightness system for Linux that automatically adjusts your screen brightness based on the time of day and **learns from your manual adjustments**, similar to Android's adaptive brightness feature. It comes equipped with a premium, minimalist monochrome desktop GUI control panel built with **PySide6**.
 
-<a href="https://github.com/LeanBitLab/adaptive-brightness-linux/releases/latest">
-  <img alt="Get it on GitHub" src="https://raw.githubusercontent.com/rubenpgrady/get-it-on-github/refs/heads/main/get-it-on-github.png" height="50">
-</a>
+This is an original, premium, open-source utility designed and developed by [LeanBitLab](https://github.com/LeanBitLab) from the ground up to solve screen strain and bring intelligent backlight automation to Linux desktops.
 
 ---
 
@@ -27,7 +29,7 @@ This customized version introduces usability enhancements and some UX improvemen
 
 ---
 
-## 🚀 Key Features & Enhancements
+## 🚀 Key Features
 
 - **📈 Interactive Spline Curve Graph** - Draws a custom-drawn, smooth 24-hour visual representation of your active brightness profile with draggable coordinate nodes to adjust target levels in real time.
 - **☀️ Circular Brightness Dial & Manual Override** - Visual dial showing current brightness, with manual overrides that seamlessly disable auto mode temporarily.
@@ -125,6 +127,13 @@ The system stores your configurations and states in standard user directories:
 ## 📚 Advanced Architecture & Customization
 Curious about how the mathematical adaptive learning model evaluates delta differences under the hood, or how to customize the core shell script execution?
 👉 **[Read the Full Architecture & Customization Guide here](script-guide.md)**
+
+---
+
+## 💖 Support our Work
+If you love this tool and want to support its ongoing development, consider sponsoring us! Your contributions help us maintain and improve our open-source utilities.
+
+👉 **[Sponsor LeanBitLab on GitHub Sponsors](https://github.com/sponsors/LeanBitLab)**
 
 ---
 
