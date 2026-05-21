@@ -1,14 +1,14 @@
-# LTvBrightness
+# LBrightness
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/banner_dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="assets/banner_light.svg">
-  <img alt="LTvBrightness Banner" src="assets/banner_light.svg">
+  <img alt="LBrightness Banner" src="assets/banner_light.svg">
 </picture>
 
 [![Version](https://img.shields.io/github/v/release/LeanBitLab/adaptive-brightness-linux?style=for-the-badge&color=f0a820&label=Version)](https://github.com/LeanBitLab/adaptive-brightness-linux/releases/latest) [![Downloads](https://img.shields.io/github/downloads/LeanBitLab/adaptive-brightness-linux/total?style=for-the-badge&color=f0a820&label=Downloads)](https://github.com/LeanBitLab/adaptive-brightness-linux/releases) [![Stars](https://img.shields.io/github/stars/LeanBitLab/adaptive-brightness-linux?style=for-the-badge&color=f0a820)](https://github.com/LeanBitLab/adaptive-brightness-linux/stargazers) [![Sponsor](https://img.shields.io/badge/Sponsor-LeanBitLab?style=for-the-badge&logo=github-sponsors&color=f0a820)](https://github.com/sponsors/LeanBitLab)
 
-**LTvBrightness** (adaptive-brightness-linux) is a lightweight, intelligent auto-brightness system for Linux that automatically adjusts your screen brightness based on the time of day and **learns from your manual adjustments**, similar to Android's adaptive brightness feature. It comes equipped with a premium, minimalist monochrome desktop GUI control panel built with **PySide6**.
+**LBrightness** (adaptive-brightness-linux) is a lightweight, intelligent auto-brightness system for Linux that automatically adjusts your screen brightness based on the time of day and **learns from your manual adjustments**, similar to Android's adaptive brightness feature. It comes equipped with a premium, minimalist monochrome desktop GUI control panel built with **PySide6**.
 
 This is an original, premium, open-source utility designed and developed by [LeanBitLab](https://github.com/LeanBitLab) from the ground up to solve screen strain and bring intelligent backlight automation to Linux desktops.
 

@@ -5,6 +5,6 @@
     .amber { fill: #f0a820; }
   </style>
   <text x="50%" y="65%" dominant-baseline="middle" text-anchor="middle" class="text">
-    <tspan class="amber">LTv</tspan><tspan class="dark">Brightness</tspan>
+    <tspan class="amber">L</tspan><tspan class="dark">Brightness</tspan>
   </text>
 </svg>
