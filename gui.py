@@ -44,12 +44,13 @@ QWidget {
     font-family: 'Segoe UI', 'Inter', 'Roboto', sans-serif;
     font-size: 14px;
 }
-QTabWidget::panel {
+QTabWidget::pane {
     border: 1px solid #28283a;
     background-color: #16161e;
     border-radius: 12px;
+    top: -1px;
 }
-QTabWidget > QWidget {
+#tab_dashboard, #tab_profile, #tab_logs {
     background-color: #16161e;
 }
 QTabBar::tab {
@@ -70,7 +71,8 @@ QTabBar::tab:selected {
     color: #ececee;
     border-color: #28283a;
     border-bottom-color: #16161e;
-    margin-bottom: -1px;
+    margin-bottom: -2px;
+    padding-bottom: 12px;
 }
 QTabBar::tab:hover:!selected {
     background-color: #1e1e2a;
@@ -252,6 +254,12 @@ QCheckBox {
     color: #ececee;
     font-weight: 600;
     spacing: 8px;
+}
+#chk_ambient, #chk_autostart, #chk_autostart_minimized {
+    color: #88889a;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 1px;
 }
 QCheckBox::indicator {
     width: 16px;
@@ -888,16 +896,19 @@ class BrightnessGUI(QMainWindow):
         
         # Tab 1: Dashboard
         self.tab_dashboard = QWidget()
+        self.tab_dashboard.setObjectName("tab_dashboard")
         self.setup_dashboard_tab()
         self.tabs.addTab(self.tab_dashboard, "DASHBOARD")
         
         # Tab 2: Profile Editor
         self.tab_profile = QWidget()
+        self.tab_profile.setObjectName("tab_profile")
         self.setup_profile_tab()
         self.tabs.addTab(self.tab_profile, "PROFILE EDITOR")
         
         # Tab 3: Logs
         self.tab_logs = QWidget()
+        self.tab_logs.setObjectName("tab_logs")
         self.setup_logs_tab()
         self.tabs.addTab(self.tab_logs, "ACTIVITY LOGS")
         
@@ -1164,16 +1175,16 @@ class BrightnessGUI(QMainWindow):
         bottom_ctrls.setSpacing(8)
         
         self.chk_ambient = QCheckBox("Enable Ambient Sensor Scaling")
+        self.chk_ambient.setObjectName("chk_ambient")
         self.chk_ambient.toggled.connect(self.toggle_ambient_sensor)
-        self.chk_ambient.setStyleSheet("color: #88889a; font-weight: 700; font-size: 11px; letter-spacing: 1px;")
         
         self.chk_autostart = QCheckBox("Start Control Panel on Login")
+        self.chk_autostart.setObjectName("chk_autostart")
         self.chk_autostart.toggled.connect(self.toggle_autostart)
-        self.chk_autostart.setStyleSheet("color: #88889a; font-weight: 700; font-size: 11px; letter-spacing: 1px;")
         
         self.chk_autostart_minimized = QCheckBox("Start Minimized in System Tray")
+        self.chk_autostart_minimized.setObjectName("chk_autostart_minimized")
         self.chk_autostart_minimized.toggled.connect(self.toggle_autostart_minimized)
-        self.chk_autostart_minimized.setStyleSheet("color: #88889a; font-weight: 700; font-size: 11px; letter-spacing: 1px;")
         
         bottom_ctrls.addWidget(self.chk_ambient)
         bottom_ctrls.addWidget(self.chk_autostart)
