@@ -58,7 +58,7 @@ QTabWidget::pane {
     border-radius: 12px;
     top: -1px;
 }
-#tab_dashboard, #tab_profile, #tab_logs {
+#tab_dashboard, #tab_profile, #tab_logs, #tab_about {
     background-color: #1e1e2a;
 }
 QTabBar::tab {
@@ -892,7 +892,7 @@ class BrightnessGUI(QMainWindow):
         header_text_layout.setSpacing(16)
         header_text_layout.setAlignment(Qt.AlignVCenter)
         
-        title_label = QLabel("LBrightness <span style='font-size: 14px; color: #88889a; font-weight: 600; letter-spacing: 0px;'>by LeanBitLab</span>")
+        title_label = QLabel("<span style='color: #7C4DFF;'>L</span>Brightness <span style='font-size: 14px; color: #88889a; font-weight: 600; letter-spacing: 0px;'>by LeanBitLab</span>")
         title_label.setProperty("class", "Title")
         
         header_text_layout.addWidget(title_label)
@@ -930,6 +930,12 @@ class BrightnessGUI(QMainWindow):
         self.tab_logs.setObjectName("tab_logs")
         self.setup_logs_tab()
         self.tabs.addTab(self.tab_logs, "ACTIVITY LOGS")
+        
+        # Tab 4: About
+        self.tab_about = QWidget()
+        self.tab_about.setObjectName("tab_about")
+        self.setup_about_tab()
+        self.tabs.addTab(self.tab_about, "ABOUT")
         
         self.setup_system_tray()
         
@@ -1323,6 +1329,86 @@ class BrightnessGUI(QMainWindow):
         layout.addWidget(self.txt_logs)
         
         self.load_logs()
+
+    def setup_about_tab(self):
+        layout = QVBoxLayout(self.tab_about)
+        layout.setContentsMargins(24, 24, 24, 24)
+        layout.setSpacing(16)
+        
+        # Center container Card
+        about_card = QFrame()
+        about_card.setProperty("class", "Card")
+        
+        card_layout = QVBoxLayout(about_card)
+        card_layout.setContentsMargins(32, 32, 32, 32)
+        card_layout.setSpacing(20)
+        card_layout.setAlignment(Qt.AlignTop)
+        
+        # Logo and Title
+        title_label = QLabel("<span style='font-size: 28px; font-weight: 800; color: #ececee;'><span style='color: #7C4DFF;'>L</span>Brightness</span>")
+        title_label.setAlignment(Qt.AlignCenter)
+        
+        subtitle_label = QLabel("<span style='font-size: 14px; font-weight: 600; color: #88889a; letter-spacing: 1px;'>ADAPTIVE BRIGHTNESS CONTROL</span>")
+        subtitle_label.setAlignment(Qt.AlignCenter)
+        
+        version_label = QLabel("<span style='font-size: 11px; font-weight: 700; color: #88889a; background-color: #0d0d14; border: 1px solid #28283a; padding: 4px 10px; border-radius: 8px;'>VERSION 1.0.0</span>")
+        version_label.setAlignment(Qt.AlignCenter)
+        
+        desc_label = QLabel(
+            "A premium, minimalist screen brightness manager with automated machine learning profile curves, "
+            "smooth fades, sleep state wake triggers, and multiple display control."
+        )
+        desc_label.setWordWrap(True)
+        desc_label.setAlignment(Qt.AlignCenter)
+        desc_label.setStyleSheet("color: #b2b2bf; font-size: 13px; line-height: 1.5;")
+        
+        # Separator line
+        sep = QFrame()
+        sep.setFrameShape(QFrame.HLine)
+        sep.setStyleSheet("background-color: #28283a; max-height: 1px;")
+        
+        # Details grid
+        details_layout = QGridLayout()
+        details_layout.setSpacing(16)
+        details_layout.setAlignment(Qt.AlignCenter)
+        
+        lbl_org_title = QLabel("DEVELOPER:")
+        lbl_org_title.setStyleSheet("color: #88889a; font-weight: 700; font-size: 11px; letter-spacing: 0.5px;")
+        lbl_org_val = QLabel("LeanBitLab")
+        lbl_org_val.setStyleSheet("color: #ececee; font-weight: 600; font-size: 13px;")
+        
+        lbl_support_title = QLabel("SUPPORT:")
+        lbl_support_title.setStyleSheet("color: #88889a; font-weight: 700; font-size: 11px; letter-spacing: 0.5px;")
+        lbl_support_val = QLabel("<a href='mailto:support@leanbitlab.com' style='color: #7C4DFF; text-decoration: none; font-weight: 600;'>support@leanbitlab.com</a>")
+        lbl_support_val.setOpenExternalLinks(True)
+        lbl_support_val.setStyleSheet("font-size: 13px;")
+        
+        lbl_source_title = QLabel("SOURCE CODE:")
+        lbl_source_title.setStyleSheet("color: #88889a; font-weight: 700; font-size: 11px; letter-spacing: 0.5px;")
+        lbl_source_val = QLabel("<a href='https://github.com/LeanBitLab/adaptive-brightness-linux' style='color: #7C4DFF; text-decoration: none; font-weight: 600;'>github.com/LeanBitLab/adaptive-brightness-linux</a>")
+        lbl_source_val.setOpenExternalLinks(True)
+        lbl_source_val.setStyleSheet("font-size: 13px;")
+        
+        details_layout.addWidget(lbl_org_title, 0, 0, Qt.AlignRight)
+        details_layout.addWidget(lbl_org_val, 0, 1, Qt.AlignLeft)
+        details_layout.addWidget(lbl_support_title, 1, 0, Qt.AlignRight)
+        details_layout.addWidget(lbl_support_val, 1, 1, Qt.AlignLeft)
+        details_layout.addWidget(lbl_source_title, 2, 0, Qt.AlignRight)
+        details_layout.addWidget(lbl_source_val, 2, 1, Qt.AlignLeft)
+        
+        # Add everything to card
+        card_layout.addWidget(title_label)
+        card_layout.addWidget(subtitle_label)
+        card_layout.addWidget(version_label)
+        card_layout.addSpacing(8)
+        card_layout.addWidget(desc_label)
+        card_layout.addWidget(sep)
+        card_layout.addSpacing(8)
+        card_layout.addLayout(details_layout)
+        card_layout.addStretch()
+        
+        layout.addWidget(about_card)
+        layout.addStretch()
 
     def setup_system_tray(self):
         self.tray = QSystemTrayIcon(self)
