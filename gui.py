@@ -1182,6 +1182,7 @@ class BrightnessGUI(QMainWindow):
         self.slider_display_brightness.setValue(50)
         self.slider_display_brightness.setFixedHeight(30)
         self.slider_display_brightness.sliderReleased.connect(self._on_focused_slider_released)
+        self.slider_display_brightness.valueChanged.connect(self._on_focused_slider_changed)
         
         self.btn_display_auto_toggle = QPushButton("AUTO ON")
         self.btn_display_auto_toggle.setFixedWidth(120)
@@ -1623,6 +1624,55 @@ class BrightnessGUI(QMainWindow):
             self.rebuild_profile_editor()
             
         self.apply_device_override(dev, val)
+        
+    def _on_focused_slider_changed(self, val):
+        """Called live while dragging the dashboard slider to update visuals in real time."""
+        # Update text label and circular display immediately
+        self.lbl_display_brightness_val.setText(f"{val:02d}%")
+        self.circular_display.setValue(val)
+        
+        # Find active profile time block and update spline curve + profile editor widgets live
+        now = datetime.now()
+        cur_min = now.hour * 60 + now.minute
+        profile_data = self.get_profile_for_current_display()
+        if profile_data:
+            sorted_times = sorted(profile_data.keys())
+            active_time_str = "0000"
+            if sorted_times:
+                sorted_mins = []
+                for t in sorted_times:
+                    try:
+                        sorted_mins.append(int(t[:2]) * 60 + int(t[2:]))
+                    except Exception:
+                        sorted_mins.append(0)
+                
+                if cur_min < sorted_mins[0]:
+                    active_time_str = sorted_times[-1]
+                elif cur_min >= sorted_mins[-1]:
+                    active_time_str = sorted_times[-1]
+                else:
+                    for i in range(len(sorted_mins) - 1):
+                        if sorted_mins[i] <= cur_min < sorted_mins[i+1]:
+                            active_time_str = sorted_times[i]
+                            break
+            
+            dev = self.get_active_display_dev()
+            if dev not in self.profiles:
+                self.profiles[dev] = {}
+            self.profiles[dev][active_time_str] = val
+            
+            # Update spline curve widget live
+            self.curve_widget.set_profile_data(self.get_profile_for_current_display())
+            
+            # Update profile editor widgets live
+            if active_time_str in self.profile_widgets:
+                slider, spin, _ = self.profile_widgets[active_time_str]
+                slider.blockSignals(True)
+                spin.blockSignals(True)
+                slider.setValue(val)
+                spin.setValue(val)
+                slider.blockSignals(False)
+                spin.blockSignals(False)
     
     def _on_focused_auto_toggled(self, checked):
         """Toggles auto-adjust for the currently selected display."""
@@ -1924,6 +1974,7 @@ class BrightnessGUI(QMainWindow):
             pass
             
         self.rebuild_profile_editor()
+        self.update_status()
         
     def rebuild_profile_editor(self):
         for i in reversed(range(self.profile_grid.count())):
