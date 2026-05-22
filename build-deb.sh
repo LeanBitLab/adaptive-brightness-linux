@@ -41,7 +41,7 @@ echo "Generating package metadata..."
 # Create DEBIAN/control
 cat << 'EOF' > "$DEBIAN_DIR/control"
 Package: adaptive-brightness-linux
-Version: 1.0.0
+Version: 1.0.1
 Section: utils
 Priority: optional
 Architecture: all
@@ -80,6 +80,6 @@ chmod 755 "$DEBIAN_DIR/prerm"
 
 # Build the Debian package
 echo "Compiling deb package..."
-dpkg-deb --root-owner-group --build "$STAGE_DIR" adaptive-brightness_1.0.0_all.deb
+dpkg-deb --root-owner-group --build "$STAGE_DIR" adaptive-brightness_1.0.1_all.deb
 
-echo "Debian package successfully built: adaptive-brightness_1.0.0_all.deb"
+echo "Debian package successfully built: adaptive-brightness_1.0.1_all.deb"

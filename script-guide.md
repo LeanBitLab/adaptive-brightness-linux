@@ -10,7 +10,8 @@ The entire system consists of four primary components working in harmony:
 
 ```mermaid
 graph TD
-    A[systemd timer: 15-min wakeups] -->|Trigger| B[auto-brightness.sh]
+    A[DBus System Wake Event] -->|Trigger| B[auto-brightness-daemon.py]
+    H[QTimer: 15-min wakeups] -->|Trigger| B
     B -->|Check Actual vs Cache| C[State Cache: auto-brightness.state]
     B -->|Read / Write Profiles| D[profiles.conf]
     E[auto-brightness-gui: PySide6] -->|Visual Spline Drag / Edit| D
@@ -19,10 +20,10 @@ graph TD
     B -->|Write snap events| F
 ```
 
-1. **The Core Script (`auto-brightness.sh`)**: Fast, lightweight Bash script that parses profiles, reads `/sys/class/backlight` brightness levels, calculates manual overrides, and handles auto adjustments.
-2. **The Graphical Interface (`auto-brightness-gui`)**: Premium monochrome desktop app built with **PySide6**. It allows users to visually configure everything without command line interaction.
+1. **The Core Daemon (`auto-brightness-daemon.py`)**: A continuous background Python application that parses profiles, reads `/sys/class/backlight` brightness levels, calculates manual overrides, and handles auto adjustments with smooth transitions and sleep/wake integration.
+2. **The Graphical Interface (`auto-brightness-gui`)**: A minimalist monochrome desktop app built with **PySide6**. It allows users to visually configure everything without command line interaction.
 3. **The Configuration File (`profiles.conf`)**: A Key-Value dictionary (`HHMM=PERCENT`) stored at `~/.config/auto-brightness/profiles.conf` detailing the screen curve.
-4. **Systemd Services (`.timer` & `.service`)**: Systemd user-level timer triggers that run the script every 15 minutes. It stays completely dormant when not executing, keeping CPU usage at zero.
+4. **Systemd Service (`auto-brightness.service`)**: A systemd user-level service that runs the background daemon continuously, ensuring it autostarts and listens for events natively.
 
 ---
 
@@ -31,18 +32,18 @@ graph TD
 The primary innovation is the background learning engine.
 
 ### 1. State Retention
-Whenever the system applies a target brightness (e.g. `40%`), the core script caches this value and a **Unix Epoch Timestamp** into a microscopic state file at `~/.local/state/auto-brightness.state`.
+Whenever the system applies a target brightness (e.g. `40%`), the core daemon caches this value and a **Unix Epoch Timestamp** into a microscopic state file at `~/.local/state/auto-brightness.state`.
 
 ### 2. Difference & Staleness Evaluation
-Every 15 minutes, the script wakes up and performs a sequence of checks before applying the regular scheduled target:
+Every 15 minutes, the daemon's internal `QTimer` triggers a calibration run, performing a sequence of checks:
 
 1. **Staleness Check**: It compares the current epoch with the cached epoch. If more than **20 minutes** have elapsed (due to sleep mode, shut down, or suspend), it bypasses learning to prevent stale data corruption.
 2. **Difference Check**: If the cache is fresh, it reads the hardware's real-time brightness (`brightnessctl -m`).
    - If `Actual == Cache`, no intervention occurred.
-   - If `Actual != Cache` (with a >5% threshold tolerance), the script mathematically concludes that you made a manual adjustment (via hardware buttons or panel sliders).
+   - If `Actual != Cache` (with a >5% threshold tolerance), the daemon mathematically concludes that you made a manual adjustment (via hardware buttons, monitor keys, or GUI manual slider).
 
 ### 3. Live Profile Injection
-When a manual adjustment is detected, the core script intercepts the regular schedule! It pulls your newly modified screen percentage and dynamically updates the currently active time block's target in `profiles.conf`.
+When a manual adjustment is detected, the core daemon intercepts the regular schedule! It pulls your newly modified screen percentage and dynamically updates the currently active time block's target in `profiles.conf`, automatically triggering a desktop notification.
 
 *Example:* At 08:00 AM, the scheduled profile is `40%`. If you find it too dim and ramp it up to `65%`, the 08:15 AM daemon check will detect the difference. It immediately rewires `0800=40` to `0800=65` inside `profiles.conf`. Starting tomorrow, your laptop will naturally snap to `65%` at 08:00 AM!
 
@@ -77,15 +78,15 @@ Instead of forcing manual configuration, the settings checkboxes control XDG aut
   ```bash
   rm ~/.config/auto-brightness/profiles.conf
   ```
-  On the next execution, the script will automatically detect the missing config and recreate the default, factory-calibrated curve.
+  On the next execution, the daemon will automatically detect the missing config and recreate the default, factory-calibrated curve.
 
 ### Disabling & Troubleshooting Systemd
 If you need to stop automatic updates manually:
-- Toggle the timer state via the GUI control panel ("Disable Timer" button).
-- Or run CLI commands:
+- Toggle the daemon/timer state via the GUI control panel.
+- Or run CLI commands to control the service:
   ```bash
-  systemctl --user stop auto-brightness.timer
-  systemctl --user disable auto-brightness.timer
+  systemctl --user stop auto-brightness.service
+  systemctl --user disable auto-brightness.service
   ```
 
 ---

@@ -1351,7 +1351,7 @@ class BrightnessGUI(QMainWindow):
         subtitle_label = QLabel("<span style='font-size: 14px; font-weight: 600; color: #88889a; letter-spacing: 1px;'>ADAPTIVE BRIGHTNESS CONTROL</span>")
         subtitle_label.setAlignment(Qt.AlignCenter)
         
-        version_label = QLabel("<span style='font-size: 11px; font-weight: 700; color: #88889a; background-color: #0d0d14; border: 1px solid #28283a; padding: 4px 10px; border-radius: 8px;'>VERSION 1.0.0</span>")
+        version_label = QLabel("<span style='font-size: 11px; font-weight: 700; color: #88889a; background-color: #0d0d14; border: 1px solid #28283a; padding: 4px 10px; border-radius: 8px;'>VERSION 1.0.1</span>")
         version_label.setAlignment(Qt.AlignCenter)
         
         desc_label = QLabel(
@@ -1361,11 +1361,6 @@ class BrightnessGUI(QMainWindow):
         desc_label.setWordWrap(True)
         desc_label.setAlignment(Qt.AlignCenter)
         desc_label.setStyleSheet("color: #b2b2bf; font-size: 13px; line-height: 1.5;")
-        
-        # Separator line
-        sep = QFrame()
-        sep.setFrameShape(QFrame.HLine)
-        sep.setStyleSheet("background-color: #28283a; max-height: 1px;")
         
         # Details grid
         details_layout = QGridLayout()
@@ -1377,11 +1372,11 @@ class BrightnessGUI(QMainWindow):
         lbl_org_val = QLabel("LeanBitLab")
         lbl_org_val.setStyleSheet("color: #ececee; font-weight: 600; font-size: 13px;")
         
-        lbl_support_title = QLabel("SUPPORT:")
-        lbl_support_title.setStyleSheet("color: #88889a; font-weight: 700; font-size: 11px; letter-spacing: 0.5px;")
-        lbl_support_val = QLabel("<a href='mailto:support@leanbitlab.com' style='color: #7C4DFF; text-decoration: none; font-weight: 600;'>support@leanbitlab.com</a>")
-        lbl_support_val.setOpenExternalLinks(True)
-        lbl_support_val.setStyleSheet("font-size: 13px;")
+        lbl_sponsor_title = QLabel("SPONSOR:")
+        lbl_sponsor_title.setStyleSheet("color: #88889a; font-weight: 700; font-size: 11px; letter-spacing: 0.5px;")
+        lbl_sponsor_val = QLabel("<a href='https://github.com/sponsors/LeanBitLab' style='color: #7C4DFF; text-decoration: none; font-weight: 600;'>github.com/sponsors/LeanBitLab</a>")
+        lbl_sponsor_val.setOpenExternalLinks(True)
+        lbl_sponsor_val.setStyleSheet("font-size: 13px;")
         
         lbl_source_title = QLabel("SOURCE CODE:")
         lbl_source_title.setStyleSheet("color: #88889a; font-weight: 700; font-size: 11px; letter-spacing: 0.5px;")
@@ -1391,8 +1386,8 @@ class BrightnessGUI(QMainWindow):
         
         details_layout.addWidget(lbl_org_title, 0, 0, Qt.AlignRight)
         details_layout.addWidget(lbl_org_val, 0, 1, Qt.AlignLeft)
-        details_layout.addWidget(lbl_support_title, 1, 0, Qt.AlignRight)
-        details_layout.addWidget(lbl_support_val, 1, 1, Qt.AlignLeft)
+        details_layout.addWidget(lbl_sponsor_title, 1, 0, Qt.AlignRight)
+        details_layout.addWidget(lbl_sponsor_val, 1, 1, Qt.AlignLeft)
         details_layout.addWidget(lbl_source_title, 2, 0, Qt.AlignRight)
         details_layout.addWidget(lbl_source_val, 2, 1, Qt.AlignLeft)
         
@@ -1400,10 +1395,9 @@ class BrightnessGUI(QMainWindow):
         card_layout.addWidget(title_label)
         card_layout.addWidget(subtitle_label)
         card_layout.addWidget(version_label)
-        card_layout.addSpacing(8)
+        card_layout.addSpacing(12)
         card_layout.addWidget(desc_label)
-        card_layout.addWidget(sep)
-        card_layout.addSpacing(8)
+        card_layout.addSpacing(16)
         card_layout.addLayout(details_layout)
         card_layout.addStretch()
         
@@ -1573,11 +1567,10 @@ class BrightnessGUI(QMainWindow):
                 "padding: 8px 16px; border-radius: 10px; font-weight: bold; font-size: 13px; }"
                 "QPushButton:hover { background-color: rgba(124, 77, 255, 0.1); border-color: #7C4DFF; color: #ececee; }"
             )
-            self.slider_display_brightness.setEnabled(True)
         else:
             self.btn_display_auto_toggle.setText("Auto")
             style_primary(self.btn_display_auto_toggle)
-            self.slider_display_brightness.setEnabled(False)
+        self.slider_display_brightness.setEnabled(True)
         self.btn_display_auto_toggle.blockSignals(False)
         
         # Update brightness slider and label

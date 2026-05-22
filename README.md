@@ -93,7 +93,7 @@ Compile and install a system-wide package that integrates natively:
    ```
 2. Install the compiled package:
    ```bash
-   sudo apt install ./adaptive-brightness_1.0.0_all.deb
+   sudo apt install ./adaptive-brightness_1.0.1_all.deb
    ```
 
 #### Option B: Local User Script (Universal)
