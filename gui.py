@@ -778,30 +778,30 @@ class ProfileCurveWidget(QWidget):
                 painter.setBrush(QColor("#7C4DFF"))
                 painter.drawEllipse(QPoint(x, y), 4, 4)
                 
-                # Floating tooltip badge
-                h = m // 60
-                mn = m % 60
+                # Floating tooltip badge (Large Percentage)
                 val = self.profile_data[m]
-                badge_text = f"{h:02d}:{mn:02d} ({val}%)"
+                pct_text = f"{val}%"
                 
-                font_badge = QFont(self.font())
-                font_badge.setPointSize(8)
-                font_badge.setBold(True)
-                painter.setFont(font_badge)
+                font_pct = QFont(self.font())
+                font_pct.setPointSize(14)
+                font_pct.setBold(True)
+                painter.setFont(font_pct)
                 
                 fm = painter.fontMetrics()
-                tw = fm.horizontalAdvance(badge_text)
+                tw = fm.horizontalAdvance(pct_text)
                 th = fm.height()
                 
-                bx = x - tw // 2 - 6
-                by = y - 32
+                bx = x - tw // 2 - 12
+                by = y - th - 24
                 
-                painter.setBrush(QColor("#0d0d14"))
-                painter.setPen(QPen(QColor("#7C4DFF"), 1))
-                painter.drawRoundedRect(bx, by, tw + 12, th + 6, 4, 4)
+                # Draw purple filled badge
+                painter.setBrush(QColor("#7C4DFF"))
+                painter.setPen(Qt.NoPen)
+                painter.drawRoundedRect(bx, by, tw + 24, th + 12, 6, 6)
                 
-                painter.setPen(QColor("#ececee"))
-                painter.drawText(bx + 6, by + th, badge_text)
+                # Draw white percentage text
+                painter.setPen(QColor("#ffffff"))
+                painter.drawText(bx + 12, by + th + 2, pct_text)
             else:
                 # Crisp white circle node
                 painter.setBrush(QColor("#0d0d14"))
@@ -1422,7 +1422,8 @@ class BrightnessGUI(QMainWindow):
             slider.blockSignals(False)
             spin.blockSignals(False)
             
-        self.update_status_dashboard_only()
+        # Intentionally NOT updating the main dashboard target percentage during live drag
+        # to prevent distraction, as requested by user.
 
     def update_status_dashboard_only(self):
         """Update textual target values quickly during live curve drags."""
