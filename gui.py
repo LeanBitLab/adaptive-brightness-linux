@@ -31,13 +31,13 @@ CONFIG_DIR = os.path.expanduser("~/.config/auto-brightness")
 CONFIG_FILE = os.path.join(CONFIG_DIR, "profiles.conf")
 STATE_FILE = os.path.expanduser("~/.local/state/auto-brightness.state")
 LOG_FILE = os.path.expanduser("~/.local/state/auto-brightness.log")
-SCRIPT_PATH = os.path.expanduser("~/.local/bin/auto-brightness.sh")
+SCRIPT_PATH = os.path.expanduser("~/.local/bin/auto-brightness-daemon.py")
 if not os.path.exists(SCRIPT_PATH):
-    if os.path.exists("/usr/bin/auto-brightness.sh"):
-        SCRIPT_PATH = "/usr/bin/auto-brightness.sh"
+    if os.path.exists("/usr/bin/auto-brightness-daemon.py"):
+        SCRIPT_PATH = "/usr/bin/auto-brightness-daemon.py"
     else:
         import shutil
-        found_path = shutil.which("auto-brightness.sh")
+        found_path = shutil.which("auto-brightness-daemon.py")
         if found_path:
             SCRIPT_PATH = found_path
 PAUSE_FILE = os.path.expanduser("~/.local/state/auto-brightness.paused")
@@ -1580,9 +1580,8 @@ class BrightnessGUI(QMainWindow):
         self.update_status()
 
     def restart_systemd_service(self):
-        """Restarts background auto-brightness timer and service to ensure configurations load fresh."""
+        """Restarts background auto-brightness service to ensure configurations load fresh."""
         try:
-            subprocess.run(["systemctl", "--user", "restart", "auto-brightness.timer"], capture_output=True)
             subprocess.run(["systemctl", "--user", "restart", "auto-brightness.service"], capture_output=True)
             self.load_logs()
         except Exception:
@@ -1681,7 +1680,7 @@ class BrightnessGUI(QMainWindow):
         self.set_device_brightness(dev, val)
         
         if (dev == "default" or dev == primary) and os.path.exists(SCRIPT_PATH):
-            subprocess.Popen(["bash", SCRIPT_PATH])
+            subprocess.Popen(["systemctl", "--user", "restart", "auto-brightness.service"])
             
         QTimer.singleShot(250, self.update_status)
 
@@ -2035,7 +2034,7 @@ X-GNOME-Autostart-enabled=true
         timer_active = False
         try:
             res = subprocess.run(
-                ["systemctl", "--user", "is-active", "auto-brightness.timer"],
+                ["systemctl", "--user", "is-active", "auto-brightness.service"],
                 capture_output=True, text=True
             )
             timer_active = (res.stdout.strip() == "active")
@@ -2134,8 +2133,8 @@ X-GNOME-Autostart-enabled=true
         enable_action = "disable" if is_active else "enable"
         
         try:
-            subprocess.run(["systemctl", "--user", enable_action, "auto-brightness.timer"])
-            subprocess.run(["systemctl", "--user", action, "auto-brightness.timer"])
+            subprocess.run(["systemctl", "--user", enable_action, "auto-brightness.service"])
+            subprocess.run(["systemctl", "--user", action, "auto-brightness.service"])
         except Exception as e:
             print(f"Error toggling systemd service: {e}")
             
@@ -2143,7 +2142,7 @@ X-GNOME-Autostart-enabled=true
         
     def trigger_script_adjust(self):
         if os.path.exists(SCRIPT_PATH):
-            subprocess.Popen(["bash", SCRIPT_PATH])
+            subprocess.Popen(["systemctl", "--user", "restart", "auto-brightness.service"])
             QTimer.singleShot(250, self.update_status)
 
     @Slot(str)

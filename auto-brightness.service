@@ -1,11 +1,13 @@
 [Unit]
-Description=Auto-adjust screen brightness with adaptive learning
+Description=Auto-adjust screen brightness with adaptive learning (Daemon)
 After=graphical-session.target
 
 [Service]
-Type=oneshot
-ExecStart=%h/.local/bin/auto-brightness.sh
+Type=simple
+ExecStart=%h/.local/bin/auto-brightness-daemon.py
 Environment=DISPLAY=:0
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=default.target

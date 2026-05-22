@@ -21,9 +21,9 @@ mkdir -p "$APP_DIR"
 mkdir -p "$SYSTEMD_DIR"
 
 echo "Copying scripts and applications..."
-# Core Shell Script
-cp auto-brightness.sh "$BIN_DIR/"
-chmod 755 "$BIN_DIR/auto-brightness.sh"
+# Core Python Daemon
+cp auto-brightness-daemon.py "$BIN_DIR/"
+chmod 755 "$BIN_DIR/auto-brightness-daemon.py"
 
 # PySide6 GUI control panel
 cp gui.py "$BIN_DIR/auto-brightness-gui"
@@ -33,12 +33,8 @@ chmod 755 "$BIN_DIR/auto-brightness-gui"
 cp auto-brightness-gui.desktop "$APP_DIR/"
 chmod 644 "$APP_DIR/auto-brightness-gui.desktop"
 
-# Systemd User Timer
-cp auto-brightness.timer "$SYSTEMD_DIR/"
-chmod 644 "$SYSTEMD_DIR/auto-brightness.timer"
-
 # Systemd User Service (Modified ExecStart for global /usr/bin installation)
-sed 's|%h/.local/bin/auto-brightness.sh|/usr/bin/auto-brightness.sh|g' auto-brightness.service > "$SYSTEMD_DIR/auto-brightness.service"
+sed 's|%h/.local/bin/auto-brightness-daemon.py|/usr/bin/auto-brightness-daemon.py|g' auto-brightness.service > "$SYSTEMD_DIR/auto-brightness.service"
 chmod 644 "$SYSTEMD_DIR/auto-brightness.service"
 
 echo "Generating package metadata..."
@@ -51,7 +47,7 @@ Priority: optional
 Architecture: all
 Maintainer: LeanBitLab <leanbitlab@users.noreply.github.com>
 Depends: brightnessctl, python3, systemd
-Recommends: python3-pyside6
+Recommends: python3-pyside6, libnotify-bin
 Description: Adaptive screen brightness with machine learning.
  A beautiful, minimalist monochrome desktop control panel GUI,
  real-time visual spline curves, pause timers, logs, and background timers.
@@ -74,10 +70,10 @@ cat << 'EOF' > "$DEBIAN_DIR/prerm"
 #!/bin/bash
 set -e
 
-# Disable service and timers globally before removing
+# Disable service globally before removing
 if [ "$1" = "remove" ] || [ "$1" = "deconfigure" ]; then
     echo "Disabling adaptive brightness services globally..."
-    systemctl --global disable auto-brightness.timer || true
+    systemctl --global disable auto-brightness.service || true
 fi
 EOF
 chmod 755 "$DEBIAN_DIR/prerm"
