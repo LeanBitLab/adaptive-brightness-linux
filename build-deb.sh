@@ -46,8 +46,8 @@ Section: utils
 Priority: optional
 Architecture: all
 Maintainer: LeanBitLab <leanbitlab@users.noreply.github.com>
-Depends: brightnessctl, python3, systemd
-Recommends: python3-pyside6, libnotify-bin
+Depends: brightnessctl, python3, python3-pyside6, systemd
+Recommends: libnotify-bin
 Description: Adaptive screen brightness with machine learning.
  A beautiful, minimalist monochrome desktop control panel GUI,
  real-time visual spline curves, pause timers, logs, and background timers.

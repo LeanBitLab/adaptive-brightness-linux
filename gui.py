@@ -1497,7 +1497,7 @@ class BrightnessGUI(QMainWindow):
         self.profiles[dev][time_str] = value
         
         if time_str in self.profile_widgets:
-            slider, spin = self.profile_widgets[time_str]
+            slider, spin, _ = self.profile_widgets[time_str]
             slider.blockSignals(True)
             spin.blockSignals(True)
             slider.setValue(value)
@@ -1944,7 +1944,7 @@ class BrightnessGUI(QMainWindow):
             self.profile_grid.addWidget(spin, row, 2)
             self.profile_grid.addWidget(btn_delete, row, 3)
             
-            self.profile_widgets[t] = (slider, spin)
+            self.profile_widgets[t] = (slider, spin, time_edit)
             row += 1
             
     def on_profile_time_changed(self, time_edit):
@@ -1975,7 +1975,7 @@ class BrightnessGUI(QMainWindow):
             self.profiles[dev] = {}
             
         new_values = {}
-        for t, (slider, _) in self.profile_widgets.items():
+        for t, (slider, _, _) in self.profile_widgets.items():
             new_values[t] = slider.value()
             
         self.profiles[dev].update(new_values)
@@ -2199,16 +2199,39 @@ X-GNOME-Autostart-enabled=true
         profile_data = self.get_profile_for_current_display()
         sorted_times = sorted(profile_data.keys())
         active_time_str = "0000"
-        for t in sorted_times:
-            try:
-                h = int(t[:2])
-                m = int(t[2:])
-                min_val = h * 60 + m
-                if cur_min >= min_val:
-                    active_time_str = t
-            except Exception:
-                pass
+        if sorted_times:
+            sorted_mins = []
+            for t in sorted_times:
+                try:
+                    sorted_mins.append(int(t[:2]) * 60 + int(t[2:]))
+                except Exception:
+                    sorted_mins.append(0)
+            
+            if cur_min < sorted_mins[0]:
+                active_time_str = sorted_times[-1]
+            elif cur_min >= sorted_mins[-1]:
+                active_time_str = sorted_times[-1]
+            else:
+                for i in range(len(sorted_mins) - 1):
+                    if sorted_mins[i] <= cur_min < sorted_mins[i+1]:
+                        active_time_str = sorted_times[i]
+                        break
         self.lbl_active_block.setText(f"{active_time_str[:2]}:{active_time_str[2:]}")
+        
+        # Style/highlight the active time block in the Profile Editor
+        for t, (slider, spin, time_edit) in self.profile_widgets.items():
+            if t == active_time_str:
+                time_edit.setStyleSheet(
+                    "background-color: #141126; border: 2px solid #7C4DFF; border-radius: 8px; "
+                    "padding: 3px 7px; color: #ececee; font-weight: bold; font-family: monospace;"
+                )
+                time_edit.setToolTip("Active Time Block (matches current system time)")
+            else:
+                time_edit.setStyleSheet(
+                    "background-color: #0d0d14; border: 1px solid #28283a; border-radius: 8px; "
+                    "padding: 4px 8px; color: #ececee; font-weight: bold; font-family: monospace;"
+                )
+                time_edit.setToolTip("")
 
     def toggle_daemon(self):
         is_active = ("ACTIVE" in self.active_badge.text() and "INACTIVE" not in self.active_badge.text()) or "PAUSED" in self.active_badge.text()

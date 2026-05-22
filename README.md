@@ -64,21 +64,22 @@ This is an open-source utility designed and developed by [LeanBitLab](https://gi
 ## 📦 Prerequisites & Installation
 
 ### Prerequisites
-- `bash` (Default on almost all distros)
 - `systemd` (Default on most distros)
-- `brightnessctl` (Available in most Linux package managers)
-- `python3` and `pip` (For PySide6 GUI interface dependencies)
+- `brightnessctl` (Backlight hardware controller, available in all major repos)
+- `python3` (Python 3.10+, runs both background daemon and GUI)
+- `python3-pyside6` (or `PySide6` installed via `pip`)
+- `libnotify-bin` (Optional, for desktop ML override notifications)
 
-Install `brightnessctl` if you haven't already:
+Install standard system prerequisites:
 ```bash
 # Debian/Ubuntu based systems
-sudo apt update && sudo apt install brightnessctl
+sudo apt update && sudo apt install brightnessctl python3-pyside6 libnotify-bin
 
 # Arch Linux
-sudo pacman -S brightnessctl
+sudo pacman -S brightnessctl python-pyside6 libnotify
 
 # Fedora
-sudo dnf install brightnessctl
+sudo dnf install brightnessctl python3-pyside6 libnotify
 ```
 
 ### Installation
@@ -111,6 +112,22 @@ To run the GUI directly from the terminal:
 ```bash
 auto-brightness-gui
 ```
+
+### 🗑️ Uninstallation
+
+- **If installed via Debian Package (Option A):**
+  Remove the package natively:
+  ```bash
+  sudo apt remove adaptive-brightness-linux
+  ```
+
+- **If installed via Local User Script (Option B):**
+  Run the clean uninstaller script:
+  ```bash
+  chmod +x uninstall.sh
+  ./uninstall.sh
+  ```
+  *(Pass `-y` to automatically wipe all user profiles and logs: `./uninstall.sh -y`)*
 
 ---
 
