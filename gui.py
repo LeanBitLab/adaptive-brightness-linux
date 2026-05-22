@@ -13,7 +13,7 @@ from datetime import datetime
 import math
 
 from PySide6.QtCore import (
-    Qt, QTimer, QFileSystemWatcher, QTime, QPoint, QSize, QEvent, Slot, QRect
+    Qt, QTimer, QFileSystemWatcher, QTime, QPoint, QSize, QEvent, Slot, QRect, QSharedMemory
 )
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
@@ -892,7 +892,7 @@ class BrightnessGUI(QMainWindow):
         header_text_layout.setSpacing(16)
         header_text_layout.setAlignment(Qt.AlignVCenter)
         
-        title_label = QLabel("LeanBitLab")
+        title_label = QLabel("LBrightness <span style='font-size: 14px; color: #88889a; font-weight: 600; letter-spacing: 0px;'>by LeanBitLab</span>")
         title_label.setProperty("class", "Title")
         
         header_text_layout.addWidget(title_label)
@@ -2199,6 +2199,13 @@ class FastTooltipStyle(QProxyStyle):
 def main():
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
     app = QApplication(sys.argv)
+    
+    # Enforce Single Instance
+    shared_mem = QSharedMemory("LeanBitLab_LBrightness_GUI_Instance")
+    if not shared_mem.create(1):
+        print("LBrightness GUI is already running.")
+        sys.exit(0)
+        
     app.setStyle(FastTooltipStyle())
     app.setQuitOnLastWindowClosed(False)
     
