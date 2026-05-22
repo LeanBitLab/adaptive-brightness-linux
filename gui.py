@@ -861,7 +861,7 @@ class BrightnessGUI(QMainWindow):
         
         # Link graph drag interactions
         self.curve_widget.point_dragged_callback = self.on_curve_point_dragged
-        self.curve_widget.drag_finished_callback = self.save_profile_config
+        self.curve_widget.drag_finished_callback = self.update_status
         
         # File Watcher for logs
         self.watcher = QFileSystemWatcher(self)
@@ -1825,7 +1825,6 @@ class BrightnessGUI(QMainWindow):
         dev = self.get_active_display_dev()
         self.profiles[dev] = dict(default_curve)
         
-        self.save_profile_config()
         self.curve_widget.set_profile_data(self.get_profile_for_current_display())
         self.rebuild_profile_editor()
         self.update_status()
@@ -2013,9 +2012,10 @@ class BrightnessGUI(QMainWindow):
             
             slider.valueChanged.connect(spin.setValue)
             spin.valueChanged.connect(slider.setValue)
+            slider.valueChanged.connect(lambda val, t_key=t: self.on_profile_slider_changed(t_key, val))
             
-            slider.sliderReleased.connect(self.save_profile_config)
-            spin.editingFinished.connect(self.save_profile_config)
+            slider.sliderReleased.connect(self.update_status)
+            spin.editingFinished.connect(self.update_status)
             
             btn_delete = QPushButton("✕")
             style_danger_icon(btn_delete)
@@ -2032,6 +2032,53 @@ class BrightnessGUI(QMainWindow):
             self.profile_widgets[t] = (slider, spin, time_edit)
             row += 1
             
+    def on_profile_slider_changed(self, time_key, val):
+        """Called live when a profile editor slider/spinbox value is changed."""
+        dev = self.get_active_display_dev()
+        if dev not in self.profiles:
+            self.profiles[dev] = {}
+        self.profiles[dev][time_key] = val
+        
+        # Update spline curve widget live
+        self.curve_widget.set_profile_data(self.get_profile_for_current_display())
+        
+        # Sync to dashboard live if it's the active time block
+        self.sync_profile_editor_to_dashboard(time_key, val)
+
+    def sync_profile_editor_to_dashboard(self, time_str, val):
+        """Syncs changes from the Profile Editor/Curve to the Dashboard live if the changed block is the active one."""
+        now = datetime.now()
+        cur_min = now.hour * 60 + now.minute
+        profile_data = self.get_profile_for_current_display()
+        if profile_data:
+            sorted_times = sorted(profile_data.keys())
+            active_time_str = "0000"
+            if sorted_times:
+                sorted_mins = []
+                for t in sorted_times:
+                    try:
+                        sorted_mins.append(int(t[:2]) * 60 + int(t[2:]))
+                    except Exception:
+                        sorted_mins.append(0)
+                
+                if cur_min < sorted_mins[0]:
+                    active_time_str = sorted_times[-1]
+                elif cur_min >= sorted_mins[-1]:
+                    active_time_str = sorted_times[-1]
+                else:
+                    for i in range(len(sorted_mins) - 1):
+                        if sorted_mins[i] <= cur_min < sorted_mins[i+1]:
+                            active_time_str = sorted_times[i]
+                            break
+            
+            if time_str == active_time_str:
+                self.lbl_profile_target.setText(f"{val}%")
+                self.lbl_display_brightness_val.setText(f"{val:02d}%")
+                self.circular_display.setValue(val)
+                self.slider_display_brightness.blockSignals(True)
+                self.slider_display_brightness.setValue(val)
+                self.slider_display_brightness.blockSignals(False)
+
     def on_profile_time_changed(self, time_edit):
         """Called when a user manually modifies the QTimeEdit for an existing time block."""
         old_time = time_edit.property("old_time")
@@ -2046,7 +2093,7 @@ class BrightnessGUI(QMainWindow):
             del self.profiles[dev][old_time]
             self.profiles[dev][new_time] = val
             
-            self.save_profile_config()
+            self.curve_widget.set_profile_data(self.get_profile_for_current_display())
             self.rebuild_profile_editor()
             self.update_status()
 
@@ -2156,7 +2203,7 @@ X-GNOME-Autostart-enabled=true
             
         self.profiles[dev][time_val] = brightness_val
         
-        self.save_profile_config()
+        self.curve_widget.set_profile_data(self.get_profile_for_current_display())
         self.rebuild_profile_editor()
         self.update_status()
 
@@ -2168,7 +2215,7 @@ X-GNOME-Autostart-enabled=true
                 return
             del self.profiles[dev][time_key]
             
-        self.save_profile_config()
+        self.curve_widget.set_profile_data(self.get_profile_for_current_display())
         self.rebuild_profile_editor()
         self.update_status()
 
