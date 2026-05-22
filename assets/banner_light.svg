@@ -2,9 +2,9 @@
   <style>
     .text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-weight: bold; font-size: 80px; }
     .dark { fill: #1A1A1A; }
-    .amber { fill: #f0a820; }
+    .purple { fill: #7C4DFF; }
   </style>
   <text x="50%" y="65%" dominant-baseline="middle" text-anchor="middle" class="text">
-    <tspan class="amber">L</tspan><tspan class="dark">Brightness</tspan>
+    <tspan class="purple">L</tspan><tspan class="dark">Brightness</tspan>
   </text>
 </svg>

@@ -21,7 +21,7 @@ cp auto-brightness.timer "$HOME/.config/systemd/user/"
 
 # Install desktop entry for menu launchers
 mkdir -p "$HOME/.local/share/applications"
-cp auto-brightness-gui.desktop "$HOME/.local/share/applications/"
+sed "s|Exec=auto-brightness-gui|Exec=$HOME/.local/bin/auto-brightness-gui|g" auto-brightness-gui.desktop > "$HOME/.local/share/applications/auto-brightness-gui.desktop"
 update-desktop-database "$HOME/.local/share/applications/" &>/dev/null || true
 
 # Reload systemd and enable timer

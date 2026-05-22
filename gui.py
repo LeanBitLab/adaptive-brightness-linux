@@ -42,7 +42,7 @@ if not os.path.exists(SCRIPT_PATH):
             SCRIPT_PATH = found_path
 PAUSE_FILE = os.path.expanduser("~/.local/state/auto-brightness.paused")
 
-# Premium dark theme with warm amber accent
+# Premium dark theme with signature LeanBitLab brand purple accent
 QSS = """
 QMainWindow {
     background-color: #0d0d14;
@@ -104,7 +104,7 @@ QScrollBar::handle:vertical {
     border-radius: 3px;
 }
 QScrollBar::handle:vertical:hover {
-    background: #f0a820;
+    background: #7C4DFF;
 }
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
     border: none;
@@ -135,11 +135,11 @@ QComboBox {
     min-width: 180px;
 }
 QComboBox:hover {
-    border-color: #f0a820;
+    border-color: #7C4DFF;
     background-color: #1e1e2a;
 }
 QComboBox:focus, QComboBox:on {
-    border-color: #f0a820;
+    border-color: #7C4DFF;
     background-color: #1e1e2a;
 }
 QComboBox::drop-down {
@@ -169,12 +169,12 @@ QComboBox QAbstractItemView::item {
     background-color: transparent;
 }
 QComboBox QAbstractItemView::item:hover {
-    background-color: rgba(240, 168, 32, 0.15);
-    color: #f0a820;
+    background-color: rgba(124, 77, 255, 0.15);
+    color: #7C4DFF;
 }
 QComboBox QAbstractItemView::item:selected {
-    background-color: rgba(240, 168, 32, 0.15);
-    color: #f0a820;
+    background-color: rgba(124, 77, 255, 0.15);
+    color: #7C4DFF;
 }
 QLabel[class="Title"] {
     font-family: 'Segoe UI', 'Inter', 'Roboto', sans-serif;
@@ -209,7 +209,7 @@ QLabel[class="InfoNote"] {
     font-weight: 500;
 }
 QPushButton {
-    background-color: #f0a820;
+    background-color: #7C4DFF;
     color: #0d0d14;
     border: none;
     padding: 10px 24px;
@@ -218,10 +218,10 @@ QPushButton {
     font-size: 13px;
 }
 QPushButton:hover {
-    background-color: #f2b840;
+    background-color: #9C77FF;
 }
 QPushButton:pressed {
-    background-color: #d4921a;
+    background-color: #5E26FF;
 }
 QPushButton:disabled {
     background-color: #16161e;
@@ -234,7 +234,7 @@ QSlider::groove:horizontal {
     border-radius: 3px;
 }
 QSlider::sub-page:horizontal {
-    background: #f0a820;
+    background: #7C4DFF;
     border-radius: 3px;
 }
 QSlider::handle:horizontal {
@@ -245,7 +245,7 @@ QSlider::handle:horizontal {
     border-radius: 7px;
 }
 QSlider::handle:horizontal:hover {
-    background: #f0a820;
+    background: #7C4DFF;
 }
 QSpinBox {
     background-color: #0d0d14;
@@ -256,7 +256,7 @@ QSpinBox {
     font-weight: 700;
 }
 QSpinBox:hover {
-    border-color: #f0a820;
+    border-color: #7C4DFF;
 }
 QCheckBox {
     color: #ececee;
@@ -277,11 +277,11 @@ QCheckBox::indicator {
     background-color: #0d0d14;
 }
 QCheckBox::indicator:hover {
-    border-color: #f0a820;
+    border-color: #7C4DFF;
 }
 QCheckBox::indicator:checked {
-    background-color: #f0a820;
-    border-color: #f0a820;
+    background-color: #7C4DFF;
+    border-color: #7C4DFF;
     image: url('/home/arjun/.config/auto-brightness/checkbox_check.svg');
 }
 QTextEdit[class="LogBox"] {
@@ -307,8 +307,8 @@ QToolTip {
 BTN_SECONDARY = (
     "QPushButton { background-color: transparent; border: 1px solid #28283a; color: #ececee; "
     "padding: 10px 24px; border-radius: 10px; font-weight: 700; font-size: 13px; }"
-    "QPushButton:hover { background-color: rgba(240, 168, 32, 0.1); border-color: #f0a820; }"
-    "QPushButton:pressed { background-color: rgba(240, 168, 32, 0.2); }"
+    "QPushButton:hover { background-color: rgba(124, 77, 255, 0.1); border-color: #7C4DFF; }"
+    "QPushButton:pressed { background-color: rgba(124, 77, 255, 0.2); }"
     "QPushButton:disabled { background-color: transparent; border-color: #28283a; color: #5c5c6e; }"
 )
 
@@ -327,10 +327,10 @@ BTN_DANGER_ICON = (
 )
 
 BTN_PRIMARY = (
-    "QPushButton { background-color: #f0a820; color: #0d0d14; border: none; "
+    "QPushButton { background-color: #7C4DFF; color: #0d0d14; border: none; "
     "padding: 10px 24px; border-radius: 10px; font-weight: 700; font-size: 13px; }"
-    "QPushButton:hover { background-color: #f2b840; }"
-    "QPushButton:pressed { background-color: #d4921a; }"
+    "QPushButton:hover { background-color: #9C77FF; }"
+    "QPushButton:pressed { background-color: #5E26FF; }"
     "QPushButton:disabled { background-color: #16161e; color: #5c5c6e; }"
 )
 
@@ -368,8 +368,8 @@ def create_sun_icon(size=32):
         y2 = center - r_ray_outer * math.sin(angle)
         painter.drawLine(int(x1), int(y1), int(x2), int(y2))
     
-    # Sun core - warm amber accent
-    painter.setBrush(QColor("#f0a820"))
+    # Sun core - brand purple accent
+    painter.setBrush(QColor("#7C4DFF"))
     painter.setPen(Qt.NoPen)
     painter.drawEllipse(QPoint(int(center), int(center)), int(r_core), int(r_core))
     
@@ -481,22 +481,22 @@ class CircularBrightnessDisplay(QWidget):
         painter.setPen(pen_track)
         painter.drawEllipse(rect)
         
-        # 2. Draw warm amber progress arc
+        # 2. Draw brand purple progress arc
         start_angle = 90 * 16
         span_angle = -int((self.value / 100.0) * 360) * 16
         
-        pen_prog = QPen(QColor("#f0a820"), 6)
+        pen_prog = QPen(QColor("#7C4DFF"), 6)
         pen_prog.setCapStyle(Qt.RoundCap)
         painter.setPen(pen_prog)
         painter.drawArc(rect, start_angle, span_angle)
         
-        # 3. Draw amber accent dot at the end of the arc
+        # 3. Draw brand purple accent dot at the end of the arc
         theta = 90 - (self.value / 100.0) * 360
         rad = math.radians(theta)
         dot_x = cx + r * math.cos(rad)
         dot_y = cy - r * math.sin(rad)
         
-        painter.setBrush(QColor("#f0a820"))
+        painter.setBrush(QColor("#7C4DFF"))
         painter.setPen(Qt.NoPen)
         painter.drawEllipse(QPoint(dot_x, dot_y), 5, 5)
         
@@ -748,23 +748,23 @@ class ProfileCurveWidget(QWidget):
         fill_path.closeSubpath()
         
         gradient = QLinearGradient(0, margin_top, 0, margin_top + graph_h)
-        gradient.setColorAt(0.0, QColor(240, 168, 32, 30))
-        gradient.setColorAt(1.0, QColor(240, 168, 32, 0))
+        gradient.setColorAt(0.0, QColor(124, 77, 255, 30))
+        gradient.setColorAt(1.0, QColor(124, 77, 255, 0))
         painter.fillPath(fill_path, QBrush(gradient))
         
         # Draw spline line
-        painter.setPen(QPen(QColor("#f0a820"), 2, Qt.SolidLine))
+        painter.setPen(QPen(QColor("#7C4DFF"), 2, Qt.SolidLine))
         painter.drawPath(path)
         
         # 3. Draw Profile Key Points (Draggable nodes)
         coords = self.get_point_coords()
         for m, (x, y) in coords.items():
             if self.dragged_point == m:
-                # Amber drag marker
-                painter.setBrush(QColor(240, 168, 32, 80))
+                # Purple drag marker
+                painter.setBrush(QColor(124, 77, 255, 80))
                 painter.setPen(Qt.NoPen)
                 painter.drawEllipse(QPoint(x, y), 8, 8)
-                painter.setBrush(QColor("#f0a820"))
+                painter.setBrush(QColor("#7C4DFF"))
                 painter.drawEllipse(QPoint(x, y), 4, 4)
                 
                 # Floating tooltip badge
@@ -786,7 +786,7 @@ class ProfileCurveWidget(QWidget):
                 by = y - 32
                 
                 painter.setBrush(QColor("#0d0d14"))
-                painter.setPen(QPen(QColor("#f0a820"), 1))
+                painter.setPen(QPen(QColor("#7C4DFF"), 1))
                 painter.drawRoundedRect(bx, by, tw + 12, th + 6, 4, 4)
                 
                 painter.setPen(QColor("#ececee"))
@@ -797,17 +797,17 @@ class ProfileCurveWidget(QWidget):
                 painter.setPen(QPen(QColor("#ececee"), 1.5))
                 painter.drawEllipse(QPoint(x, y), 4, 4)
         
-        # 4. Current Time Marker (amber glow)
+        # 4. Current Time Marker (purple glow)
         current_val = self.get_interpolated_value(self.current_time_val)
         cur_x = margin_left + (self.current_time_val / 1440.0 * graph_w)
         cur_y = margin_top + graph_h - (current_val / 100.0 * graph_h)
         
-        painter.setBrush(QColor(240, 168, 32, 80))
+        painter.setBrush(QColor(124, 77, 255, 80))
         painter.setPen(Qt.NoPen)
         painter.drawEllipse(QPoint(cur_x, cur_y), 8, 8)
         
         painter.setBrush(QColor("#ececee"))
-        painter.setPen(QPen(QColor("#f0a820"), 1.5))
+        painter.setPen(QPen(QColor("#7C4DFF"), 1.5))
         painter.drawEllipse(QPoint(cur_x, cur_y), 3.5, 3.5)
         
         painter.end()
@@ -822,7 +822,7 @@ class BrightnessGUI(QMainWindow):
             os.makedirs(CONFIG_DIR, exist_ok=True)
             arrow_path = os.path.join(CONFIG_DIR, "down_arrow.svg")
             with open(arrow_path, "w") as f:
-                f.write('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#f0a820" d="M7 10l5 5 5-5z"/></svg>')
+                f.write('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#7C4DFF" d="M7 10l5 5 5-5z"/></svg>')
                 
             check_path = os.path.join(CONFIG_DIR, "checkbox_check.svg")
             with open(check_path, "w") as f:
@@ -1073,7 +1073,7 @@ class BrightnessGUI(QMainWindow):
         paused_status_layout.setSpacing(8)
         
         self.lbl_pause_countdown = QLabel("Paused")
-        self.lbl_pause_countdown.setStyleSheet("color: #f0a820; font-size: 13px; font-weight: 700; margin: 4px 0;")
+        self.lbl_pause_countdown.setStyleSheet("color: #7C4DFF; font-size: 13px; font-weight: 700; margin: 4px 0;")
         self.lbl_pause_countdown.setAlignment(Qt.AlignCenter)
         
         self.btn_resume = QPushButton("Resume Adjustments")
@@ -1470,7 +1470,7 @@ class BrightnessGUI(QMainWindow):
             self.btn_display_auto_toggle.setStyleSheet(
                 "QPushButton { background-color: transparent; color: #5c5c6e; border: 2px solid #28283a; "
                 "padding: 8px 16px; border-radius: 10px; font-weight: bold; font-size: 13px; }"
-                "QPushButton:hover { background-color: rgba(240, 168, 32, 0.1); border-color: #f0a820; color: #ececee; }"
+                "QPushButton:hover { background-color: rgba(124, 77, 255, 0.1); border-color: #7C4DFF; color: #ececee; }"
             )
             self.slider_display_brightness.setEnabled(True)
         else:
@@ -2071,7 +2071,7 @@ X-GNOME-Autostart-enabled=true
             self.pause_container.show()
             
             if timer_active:
-                self.active_badge.setText("☀ BRIGHTNESS <span style='color: #f0a820;'>ACTIVE</span>")
+                self.active_badge.setText("☀ BRIGHTNESS <span style='color: #7C4DFF;'>ACTIVE</span>")
                 self.btn_daemon_toggle.setText("Disable Timer")
                 style_secondary(self.btn_daemon_toggle)
             else:
