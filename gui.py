@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Adaptive Brightness GUI
-A premium, minimalist monochrome signature desktop interface for adaptive-brightness-linux.
+A minimalist monochrome signature desktop interface for adaptive-brightness-linux.
 Built with PySide6 (Qt for Python).
 """
 
@@ -1355,7 +1355,7 @@ class BrightnessGUI(QMainWindow):
         version_label.setAlignment(Qt.AlignCenter)
         
         desc_label = QLabel(
-            "A premium, minimalist screen brightness manager with automated machine learning profile curves, "
+            "A minimalist screen brightness manager with automated machine learning profile curves, "
             "smooth fades, sleep state wake triggers, and multiple display control."
         )
         desc_label.setWordWrap(True)
