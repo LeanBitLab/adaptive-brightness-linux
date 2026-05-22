@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
     QGridLayout, QTabWidget, QLabel, QSlider, QSpinBox, QPushButton, 
     QTextEdit, QSystemTrayIcon, QMenu, QScrollArea, QFrame, QSizePolicy, QCheckBox,
-    QComboBox, QProxyStyle, QStyle, QStyledItemDelegate, QTimeEdit
+    QComboBox, QProxyStyle, QStyle, QStyledItemDelegate, QTimeEdit, QStyleOptionSlider
 )
 from PySide6.QtGui import (
     QPainter, QColor, QPen, QBrush, QPixmap, QIcon, QPainterPath, 
@@ -210,7 +210,7 @@ QLabel[class="InfoNote"] {
 }
 QPushButton {
     background-color: #7C4DFF;
-    color: #0d0d14;
+    color: #ffffff;
     border: none;
     padding: 10px 24px;
     border-radius: 10px;
@@ -327,7 +327,7 @@ BTN_DANGER_ICON = (
 )
 
 BTN_PRIMARY = (
-    "QPushButton { background-color: #7C4DFF; color: #0d0d14; border: none; "
+    "QPushButton { background-color: #7C4DFF; color: #ffffff; border: none; "
     "padding: 10px 24px; border-radius: 10px; font-weight: 700; font-size: 13px; }"
     "QPushButton:hover { background-color: #9C77FF; }"
     "QPushButton:pressed { background-color: #5E26FF; }"
@@ -447,6 +447,17 @@ class NoWheelSlider(QSlider):
     """QSlider that ignores mouse wheel events to prevent accidental changes when scrolling."""
     def wheelEvent(self, event):
         event.ignore()
+
+    def mousePressEvent(self, event):
+        option = QStyleOptionSlider()
+        self.initStyleOption(option)
+        handle_rect = self.style().subControlRect(
+            QStyle.CC_Slider, option, QStyle.SC_SliderHandle, self
+        )
+        if handle_rect.contains(event.pos()):
+            super().mousePressEvent(event)
+        else:
+            event.accept()
 
 
 class CircularBrightnessDisplay(QWidget):
