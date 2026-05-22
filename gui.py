@@ -1377,8 +1377,11 @@ class BrightnessGUI(QMainWindow):
         self.tray.show()
 
     def on_tray_activated(self, reason):
-        if reason == QSystemTrayIcon.DoubleClick:
-            self.show_normal()
+        if reason == QSystemTrayIcon.Trigger or reason == QSystemTrayIcon.DoubleClick:
+            if self.isVisible():
+                self.hide()
+            else:
+                self.show_normal()
 
     def show_normal(self):
         self.show()
