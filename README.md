@@ -29,6 +29,20 @@ This is an open-source utility designed and developed by [LeanBitLab](https://gi
 
 ---
 
+## 📥 Download
+
+<table border="0">
+  <tr>
+    <td align="center" valign="middle">
+      <a href="https://github.com/LeanBitLab/adaptive-brightness-linux/releases/latest">
+        <img alt="Get it on GitHub" src="assets/get-it-on-github.png" height="90">
+      </a>
+    </td>
+  </tr>
+</table>
+
+---
+
 ## 🚀 Key Features
 
 - **📈 Interactive Spline Curve Graph** - Draws a custom-drawn, smooth 24-hour visual representation of your active brightness profile with draggable coordinate nodes to adjust target levels in real time.
