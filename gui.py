@@ -1588,6 +1588,40 @@ class BrightnessGUI(QMainWindow):
         """Applies slider override to the currently selected display."""
         dev = self.get_active_display_dev()
         val = self.slider_display_brightness.value()
+        
+        # Immediately sync to the profile's active time block in the editor
+        now = datetime.now()
+        cur_min = now.hour * 60 + now.minute
+        profile_data = self.get_profile_for_current_display()
+        if profile_data:
+            sorted_times = sorted(profile_data.keys())
+            active_time_str = "0000"
+            if sorted_times:
+                sorted_mins = []
+                for t in sorted_times:
+                    try:
+                        sorted_mins.append(int(t[:2]) * 60 + int(t[2:]))
+                    except Exception:
+                        sorted_mins.append(0)
+                
+                if cur_min < sorted_mins[0]:
+                    active_time_str = sorted_times[-1]
+                elif cur_min >= sorted_mins[-1]:
+                    active_time_str = sorted_times[-1]
+                else:
+                    for i in range(len(sorted_mins) - 1):
+                        if sorted_mins[i] <= cur_min < sorted_mins[i+1]:
+                            active_time_str = sorted_times[i]
+                            break
+            
+            if dev not in self.profiles:
+                self.profiles[dev] = {}
+            self.profiles[dev][active_time_str] = val
+            
+            self.save_profile_config()
+            self.curve_widget.set_profile_data(self.get_profile_for_current_display())
+            self.rebuild_profile_editor()
+            
         self.apply_device_override(dev, val)
     
     def _on_focused_auto_toggled(self, checked):
