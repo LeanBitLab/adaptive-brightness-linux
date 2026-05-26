@@ -143,7 +143,7 @@ def calc_ambient_offset(lux):
     elif lux > 500: return 10
     return 0
 
-def run_adjustment():
+def run_adjustment(skip_learning=False):
     if os.path.exists(PAUSE_FILE):
         try:
             with open(PAUSE_FILE, "r") as f:
@@ -208,7 +208,7 @@ def run_adjustment():
             nearest = L_min if diff_L <= diff_U else U_min
             nearest = (nearest + 1440) % 1440
             nearest_time = f"{nearest//60:02d}{nearest%60:02d}"
-
+ 
         target += offset
         target = max(5, min(100, target))
         
@@ -227,7 +227,7 @@ def run_adjustment():
                     age = now_epoch - last_time
                     diff = abs(current - last_set)
                     
-                    if age <= STATE_MAX_AGE and diff > 5:
+                    if not skip_learning and age <= STATE_MAX_AGE and diff > 5:
                         target = current
                         log_msg(f"Learned new manual preference for {dev}: {current}% for profile {nearest_time}")
                         subprocess.run(["notify-send", "-a", "LBrightness", "-i", "display-brightness-symbolic", "LBrightness: Learned Preference", f"Saved new brightness {current}% for {nearest_time[:2]}:{nearest_time[2:]}"], stderr=subprocess.DEVNULL)
@@ -266,7 +266,7 @@ def run_adjustment():
 def on_sleep(sleeping):
     if not sleeping:
         # Wait a moment for screen to turn on
-        QTimer.singleShot(1500, run_adjustment)
+        QTimer.singleShot(1500, lambda: run_adjustment(skip_learning=True))
 
 if __name__ == "__main__":
     app = QCoreApplication(sys.argv)
@@ -280,6 +280,6 @@ if __name__ == "__main__":
     timer.start(15 * 60 * 1000) # 15 minutes
     
     # Run once on start
-    QTimer.singleShot(100, run_adjustment)
+    QTimer.singleShot(100, lambda: run_adjustment(skip_learning=True))
     
     sys.exit(app.exec())
