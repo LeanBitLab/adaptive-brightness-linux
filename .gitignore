@@ -33,14 +33,36 @@ Thumbs.db
 *.paused
 profiles.conf
 
-# Agent and AI temporary files
+# Environment variables
+.env
+
+# AI & Agent configurations
+.agents/
+.pi/
+.antigravitycli/
+.antigravity/
 .antigravityignore
+.gemini/
 .geminiignore
 GEMINI.md
 GEMINI.original.md
+.qwen/
+.claude/
+CLAUDE.md
+.cursor/
+.cursorrules
+.windsurf/
+.windsurfrules
+.cline/
+.roo/
+.continue/
+
 # Packaging and distribution
 dist/
 *.deb
 
 # Local release notes
 RELEASE_NOTES.md
+
+# Rust build artifacts
+target/
