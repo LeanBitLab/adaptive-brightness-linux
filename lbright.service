@@ -7,6 +7,8 @@ Type=simple
 ExecStart=%h/.local/bin/lbright daemon
 Restart=on-failure
 RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
 
 [Install]
 WantedBy=default.target
