@@ -8,111 +8,66 @@
 
 [![Version](https://img.shields.io/github/v/release/LeanBitLab/adaptive-brightness-linux?label=Version&style=for-the-badge&color=7C4DFF)](https://github.com/LeanBitLab/adaptive-brightness-linux/releases/latest) [![Downloads](https://img.shields.io/github/downloads/LeanBitLab/adaptive-brightness-linux/total?style=for-the-badge&color=7C4DFF&label=Downloads)](https://github.com/LeanBitLab/adaptive-brightness-linux/releases) [![Stars](https://img.shields.io/github/stars/LeanBitLab/adaptive-brightness-linux?style=for-the-badge&color=7C4DFF)](https://github.com/LeanBitLab/adaptive-brightness-linux/stargazers) [![Sponsor](https://img.shields.io/badge/Sponsor-LeanBitLab-7C4DFF?style=for-the-badge&logo=github-sponsors&logoColor=white)](https://github.com/sponsors/LeanBitLab)
 
-**LBrightness** (adaptive-brightness-linux) is a lightweight, intelligent auto-brightness system for Linux that automatically adjusts your screen brightness based on the time of day and **learns from your manual adjustments**, similar to Android's adaptive brightness feature. It comes equipped with a minimalist monochrome desktop GUI control panel built with **PySide6**.
+**LBrightness (`lbright`)** is a lightweight, ultra-efficient, intelligent auto-brightness system for Linux. Written in high-performance **Rust**, it automatically adjusts screen brightness based on time-of-day curves and Ambient Light Sensors (ALS), learning from your manual adjustments seamlessly.
 
-This is an open-source utility designed and developed by [LeanBitLab](https://github.com/LeanBitLab) from the ground up to solve screen strain and bring intelligent backlight automation to Linux desktops.
-
----
-
-## 🎨 Screenshots
-
-<table>
-  <tr>
-    <td align="center"><b>Dashboard View</b></td>
-    <td align="center"><b>Profile Editor View</b></td>
-  </tr>
-  <tr>
-    <td><img src="docs/screenshots/1.png" width="100%" alt="Dashboard View"/></td>
-    <td><img src="docs/screenshots/2.png" width="100%" alt="Profile Editor View"/></td>
-  </tr>
-</table>
-
----
-
-## 📥 Download
-
-<table border="0">
-  <tr>
-    <td align="center" valign="middle">
-      <a href="https://github.com/LeanBitLab/adaptive-brightness-linux/releases/latest">
-        <img alt="Get it on GitHub" src="assets/get-it-on-github.png" height="90">
-      </a>
-    </td>
-  </tr>
-</table>
+Built for microsecond-fast direct kernel `sysfs` I/O, robust external monitor DDC/CI control via `ddcutil`, and sub-5MB background memory footprint with zero runtime crashes.
 
 ---
 
 ## 🚀 Key Features
 
-- **📈 Interactive Spline Curve Graph** - Draws a custom-drawn, smooth 24-hour visual representation of your active brightness profile with draggable coordinate nodes to adjust target levels in real time.
-- **☀️ Circular Brightness Dial & Manual Override** - Visual dial showing current brightness, with manual overrides that seamlessly disable auto mode temporarily.
-- **⚙️ System Control Center**:
-  - **Disable / Enable Timer**: Instantly control the background `systemd` daemon check timer.
-  - **Adjust Now**: Snaps the screen to the active profile target level.
-  - **Restart Daemon**: Applies profiles and configurations fresh.
-  - **Reset Overrides**: Clears any active manual offsets, restoring normal profile curve snap.
-  - **Force Learn**: Save the current manual override level immediately into the active time block.
-  - **Restore Defaults**: Instantly resets curves to factory-calibrated defaults.
-- **⏸️ Advanced Pause controls** - Pause adjustments for `1h`, `3h`, `8h`, or `Indefinitely` with an elegant live countdown panel.
-- **✍️ Visual Profile Editor**:
-  - **Dynamic Time Blocks**: Add or delete time blocks, adjust brightness sliders, or double-click to input exact spinbox percentages.
-  - **Interactive Time Setting**: Direct manual `QTimeEdit` boxes to change time block schedules dynamically.
-- **📋 Real-Time Logging** - Built-in syntax-highlighted activity logs screen to monitor system events and learning metrics.
-- **📥 System Tray & Autostart Integration**:
-  - Minimizes silently to the system tray with standard right-click quick menus.
-  - **Dual-Checkbox Setup**: Configure "Start Control Panel on Login" and/or "Start Minimized in System Tray" directly via simple UI checkboxes.
+- **⚡ Direct Sysfs Hardware Control:** Reads and writes directly to `/sys/class/backlight/*` with zero subprocess overhead and microsecond latency.
+- **🖥️ External Monitor Support (DDC/CI):** Communicates with external monitors via DDC/CI (VCP `0x10`) over an isolated worker thread with command timeouts.
+- **🧠 Adaptive Learning:** Learns your preferred screen brightness when you make manual adjustments on internal panels.
+- **📈 24-Hour Time Curves:** Smooth, linear interpolation wrapping seamlessly across midnight.
+- **☀️ Ambient Light Sensor (ALS) Integration:** Smooths sensor readings with rolling average and configurable hysteresis to eliminate screen jitter.
+- **⌨️ Interactive Terminal UI (TUI):** Built-in ANSI line-based menu to view live status, edit 24h curves, toggle pause, and rescan devices over SSH or local terminal.
+- **🪶 Zero-Overhead Background Daemon:** Uses a predictable 100ms synchronous tick loop with **< 4MB RSS** and 0.0% idle CPU.
+- **🔄 Non-Destructive Migration:** Import legacy `profiles.conf` into the new structured INI format with `lbright migrate [--dry-run]`.
 
 ---
 
-## ⚙️ How the Adaptive System Works
+## ⌨️ CLI & Subcommands
 
-- **Time-Based Profiles:** By default, brightness smoothly ramps up during sunrise, peaks during the day, and gracefully ramps down during sunset into the night.
-- **Adaptive Learning:** The script runs in the background via a `systemd` user timer. If you manually change your screen brightness using your keyboard keys, monitor slider, or GUI manual slider, the system detects your intervention. It then **permanently saves** your newly preferred brightness to the currently active time block's profile!
-- **Intelligent Verification:** Distinguishes between manual adjustments and system reboots or long sleep gaps, ensuring your profiles aren't accidentally overwritten with stale data.
-- **Granular Control:** Profiles run in customizable 15-30 minute intervals, providing continuous, smooth transitions without shocking your eyes.
-- **Hardware Agnostic:** Communicates directly with the Linux kernel's `/sys/class/backlight` using `brightnessctl`, which means it works seamlessly on GNOME, KDE Plasma, XFCE, Sway, Hyprland, and other window managers.
+```bash
+# View live system status, detected displays, brightness, and sensor metrics
+lbright status
+
+# Open interactive terminal menu & curve editor
+lbright tui
+
+# Scan for internal panels and external DDC/CI displays
+lbright scan
+
+# Manually set brightness (0-100)
+lbright set internal 60
+lbright set ddc:1 50
+lbright set ddc:serial=ABC123 45
+
+# Pause or resume automatic adjustments
+lbright pause 30m
+lbright pause 1h
+lbright pause indefinite
+lbright pause off
+
+# Import old profiles.conf into config.ini
+lbright migrate --dry-run
+lbright migrate
+
+# Run background daemon manually (or via systemd)
+lbright daemon --foreground
+```
 
 ---
 
 ## 📦 Prerequisites & Installation
 
 ### Prerequisites
-- `systemd` (Default on most distros)
-- `brightnessctl` (Backlight hardware controller, available in all major repos)
-- `python3` (Python 3.10+, runs both background daemon and GUI)
-- `python3-pyside6` (or `PySide6` installed via `pip`)
-- `libnotify-bin` (Optional, for desktop ML override notifications)
+- `rust` & `cargo` (to build from source)
+- `systemd` (optional, for user service)
+- `ddcutil` (optional, required only for external DDC/CI monitors)
 
-Install standard system prerequisites:
-```bash
-# Debian/Ubuntu based systems
-sudo apt update && sudo apt install brightnessctl python3-pyside6 libnotify-bin
-
-# Arch Linux
-sudo pacman -S brightnessctl python-pyside6 libnotify
-
-# Fedora
-sudo dnf install brightnessctl python3-pyside6 libnotify
-```
-
-### Installation
-
-#### Option A: Native Debian Package (Recommended for Debian/Ubuntu)
-Compile and install a system-wide package that integrates natively:
-
-1. Build the package:
-   ```bash
-   chmod +x build-deb.sh
-   ./build-deb.sh
-   ```
-2. Install the compiled package:
-   ```bash
-   sudo apt install ./adaptive-brightness_1.0.1_all.deb
-   ```
-
-#### Option B: Local User Script (Universal)
-Clone and run the standard installer to install in user space (`~/.local/bin`):
+### Quick Install
 
 ```bash
 git clone https://github.com/LeanBitLab/adaptive-brightness-linux.git
@@ -120,51 +75,22 @@ cd adaptive-brightness-linux
 chmod +x install.sh
 ./install.sh
 ```
-*Note: Both installation methods automatically configure your standard XDG desktop launcher, meaning you can search for and launch "Adaptive Brightness" directly from your application launcher or menu drawer.*
 
-To run the GUI directly from the terminal:
-```bash
-auto-brightness-gui
-```
+The installer builds the release binary, places `lbright` in `~/.local/bin/`, and sets up the `lbright.service` user unit.
 
 ### 🗑️ Uninstallation
 
-- **If installed via Debian Package (Option A):**
-  Remove the package natively:
-  ```bash
-  sudo apt remove adaptive-brightness-linux
-  ```
-
-- **If installed via Local User Script (Option B):**
-  Run the clean uninstaller script:
-  ```bash
-  chmod +x uninstall.sh
-  ./uninstall.sh
-  ```
-  *(Pass `-y` to automatically wipe all user profiles and logs: `./uninstall.sh -y`)*
+```bash
+./uninstall.sh
+```
 
 ---
 
-## 📂 Configuration & Logs
+## 📂 Configuration & State Paths
 
-The system stores your configurations and states in standard user directories:
-
-- **Profiles Configuration**: `~/.config/auto-brightness/profiles.conf` (Stores the HHMM=PERCENT mappings).
-- **Diagnostics & Logs**: `~/.local/state/auto-brightness.log` (Monitors script snap-to-profile and learning actions).
-- **State Cache**: `~/.local/state/auto-brightness.state` (Saves active script state metrics).
-
----
-
-## 📚 Advanced Architecture & Customization
-Curious about how the mathematical adaptive learning model evaluates delta differences under the hood, or how to customize the core shell script execution?
-👉 **[Read the Full Architecture & Customization Guide here](script-guide.md)**
-
----
-
-## 💖 Support our Work
-If you love this tool and want to support its ongoing development, consider sponsoring us! Your contributions help us maintain and improve our open-source utilities.
-
-👉 **[Sponsor LeanBitLab on GitHub Sponsors](https://github.com/sponsors/LeanBitLab)**
+- **Configuration:** `~/.config/lbrightness/config.ini`
+- **State Directory:** `~/.local/state/lbrightness/`
+- **Legacy Profiles:** `~/.config/auto-brightness/profiles.conf` (can be imported via `lbright migrate`)
 
 ---
 
