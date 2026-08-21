@@ -61,8 +61,5 @@ CLAUDE.md
 dist/
 *.deb
 
-# Local release notes
-RELEASE_NOTES.md
-
 # Rust build artifacts
 target/
