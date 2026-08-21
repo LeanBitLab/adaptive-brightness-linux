@@ -18,9 +18,13 @@ use config::{
 use ddc::{ddc_set_vcp, scan_ddc_displays};
 use state::{get_state_dir, parse_pause_arg, read_pause_state, set_pause_state, PauseState};
 
+fn print_version() {
+    println!("lbright {}", env!("CARGO_PKG_VERSION"));
+}
+
 fn print_help() {
     println!(
-        r#"lbright - High-efficiency Adaptive Brightness System for Linux
+        r#"lbright {} - High-efficiency Adaptive Brightness System for Linux
 
 USAGE:
     lbright <SUBCOMMAND> [OPTIONS]
@@ -33,6 +37,7 @@ SUBCOMMANDS:
     set <device> <0-100>               Manually set device brightness (e.g. 'internal', 'ddc:1')
     pause <duration|off|indefinite>    Pause or resume automatic brightness adjustments
     migrate [--dry-run]                Import legacy profiles.conf into config.ini
+    version                            Print version information
     help                               Print this help message
 
 DEVICE SYNTAX (for 'set'):
@@ -50,7 +55,8 @@ EXAMPLES:
     lbright pause 30m
     lbright pause off
     lbright migrate --dry-run
-"#
+"#,
+        env!("CARGO_PKG_VERSION")
     );
 }
 
@@ -63,6 +69,9 @@ fn main() {
 
     let subcommand = args[1].to_ascii_lowercase();
     match subcommand.as_str() {
+        "--version" | "-v" | "-V" | "version" => {
+            print_version();
+        }
         "daemon" => {
             let foreground = args.iter().any(|a| a == "--foreground" || a == "-f");
             daemon::run_daemon(foreground);
