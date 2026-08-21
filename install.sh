@@ -1,38 +1,41 @@
 #!/bin/bash
-# Installer for Adaptive Auto-Brightness
+# Installer for LBrightness (Rust)
+set -e
 
-echo "Installing Adaptive Auto-Brightness..."
+echo "=== Installing LBrightness (lbright) ==="
 
-# Create necessary directories
+if ! command -v cargo >/dev/null 2>&1; then
+    echo "Error: 'cargo' is required to compile lbright."
+    exit 1
+fi
+
+echo "Building release binary with Cargo..."
+cargo build --release
+
+# Ensure target directories exist
 mkdir -p "$HOME/.local/bin"
 mkdir -p "$HOME/.config/systemd/user"
-mkdir -p "$HOME/.config/auto-brightness"
-mkdir -p "$HOME/.local/state"
+mkdir -p "$HOME/.config/lbrightness"
+mkdir -p "$HOME/.local/state/lbrightness"
 
-# Copy the daemon and GUI
-cp auto-brightness-daemon.py "$HOME/.local/bin/"
-chmod +x "$HOME/.local/bin/auto-brightness-daemon.py"
-cp gui.py "$HOME/.local/bin/auto-brightness-gui"
-chmod +x "$HOME/.local/bin/auto-brightness-gui"
+# Stop old python daemon if running
+systemctl --user stop auto-brightness.service 2>/dev/null || true
+systemctl --user disable auto-brightness.service 2>/dev/null || true
 
-# Copy systemd units
-cp auto-brightness.service "$HOME/.config/systemd/user/"
+# Install binary
+install -Dm755 target/release/lbright "$HOME/.local/bin/lbright"
+install -Dm644 lbright.service "$HOME/.config/systemd/user/lbright.service"
 
-# Clean up old timer if exists
-systemctl --user stop auto-brightness.timer 2>/dev/null || true
-systemctl --user disable auto-brightness.timer 2>/dev/null || true
-rm -f "$HOME/.config/systemd/user/auto-brightness.timer"
-rm -f "$HOME/.local/bin/auto-brightness.sh"
-
-# Install desktop entry for menu launchers
-mkdir -p "$HOME/.local/share/applications"
-sed "s|Exec=auto-brightness-gui|Exec=$HOME/.local/bin/auto-brightness-gui|g" auto-brightness-gui.desktop > "$HOME/.local/share/applications/auto-brightness-gui.desktop"
-update-desktop-database "$HOME/.local/share/applications/" &>/dev/null || true
-
-# Reload systemd and enable service
+# Reload systemd and enable lbright service
 systemctl --user daemon-reload
-systemctl --user enable --now auto-brightness.service
+systemctl --user enable --now lbright.service 2>/dev/null || true
 
+echo ""
 echo "Installation complete!"
-echo "The python daemon runs continuously in the background, smoothly adjusting brightness and listening for sleep/wake events."
-echo "You can launch the GUI control panel via application menu ('Adaptive Brightness') or command 'auto-brightness-gui'."
+echo "Binary installed to: $HOME/.local/bin/lbright"
+echo ""
+echo "To check system status:       lbright status"
+echo "To open interactive menu:     lbright tui"
+echo "To scan displays:             lbright scan"
+echo "To migrate old configuration: lbright migrate --dry-run"
+echo "                              lbright migrate"
