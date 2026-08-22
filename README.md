@@ -195,6 +195,58 @@ Run `lbright tui` from any terminal or SSH session to access an interactive mana
 
 ---
 
+## 🖥️ External Display Setup (DDC/CI) & Troubleshooting
+
+`lbright` controls external monitors using the industry-standard **DDC/CI** (Display Data Channel Command Interface) protocol via `ddcutil`.
+
+### 1. Requirements for External Displays
+
+* **Direct Digital Connection (Required):**
+  * Connect using direct **HDMI-to-HDMI**, **DisplayPort-to-DisplayPort**, **USB-C (DP Alt Mode)**, or **DVI-D**.
+  > [!WARNING]
+  > **VGA to HDMI / HDMI to VGA adapters do NOT work.** Active and passive analog VGA converters block bidirectional I2C communication on slave address `0x37`, preventing software brightness adjustment.
+* **Monitor OSD Menu Configuration:**
+  * Open your physical monitor's built-in On-Screen Display (OSD) menu using its front or bottom buttons.
+  * Navigate to **Settings** / **System** / **OSD Setup** / **Miscellaneous**.
+  * Ensure **DDC/CI** is toggled to **"On"** or **"Enabled"**.
+* **Software Prerequisites & Permissions:**
+  ```bash
+  # Install ddcutil and i2c-tools
+  sudo apt install -y ddcutil i2c-tools
+
+  # Add your user to the i2c group
+  sudo usermod -aG i2c $USER
+
+  # Ensure kernel i2c-dev module is loaded
+  sudo modprobe i2c-dev
+  echo "i2c-dev" | sudo tee /etc/modules-load.d/i2c-dev.conf
+  ```
+
+### 2. Verify External Display Detection
+
+Test if your monitor responds to DDC/CI commands:
+
+```bash
+# 1. Direct hardware check
+ddcutil detect
+
+# 2. LBrightness hardware scan
+lbright scan
+
+# 3. Test changing brightness on external display #1 to 50%
+lbright set ddc:1 50
+```
+
+### 3. External Display Troubleshooting
+
+| Issue / Error Message | Cause | Solution |
+| :--- | :--- | :--- |
+| `Monitor does not support DDC/CI (address 0x37 unresponsive)` | DDC/CI disabled in monitor menu or blocked by video adapter. | 1. Enable DDC/CI in monitor physical OSD menu.<br>2. Replace VGA converter dongles with direct HDMI, DisplayPort, or DVI cables. |
+| `Permission denied` opening `/dev/i2c-*` | Current user is not in `i2c` group. | Run `sudo usermod -aG i2c $USER`, then log out and log back in (or run `newgrp i2c`). |
+| External monitor not updating in background daemon | Display section disabled or daemon needs rescan. | Run `lbright scan` or open `lbright tui` -> *Edit External Display Profiles* to ensure the profile is enabled. |
+
+---
+
 ## 🔧 Configuration Reference (`config.ini`)
 
 The configuration file is located at `~/.config/lbrightness/config.ini`. It uses an INI structure with a `[general]` section and individual device curve sections.
