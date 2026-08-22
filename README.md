@@ -71,6 +71,21 @@ The installer will:
 3. Install and harden `lbright.service` into `~/.config/systemd/user/`.
 4. Gracefully stop any legacy daemon and start `lbright.service`.
 
+### Debian / Ubuntu (`.deb` Package)
+
+To build and install a standard Debian package on Debian, Ubuntu, Linux Mint, or Pop!_OS:
+
+```bash
+# Build the package
+./build-deb.sh
+
+# Install the generated .deb package
+sudo dpkg -i lbright_*.deb
+
+# Enable and start the background service
+systemctl --user enable --now lbright.service
+```
+
 ### Manual Build & Installation
 
 ```bash
