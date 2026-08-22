@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Adaptive Brightness
-Comment=Configure and monitor adaptive auto-brightness
-Exec=auto-brightness-gui
-Icon=video-display
-Terminal=false
-Type=Application
-Categories=Settings;HardwareSettings;
-Keywords=brightness;backlight;adaptive;auto;screen;
