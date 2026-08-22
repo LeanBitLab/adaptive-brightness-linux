@@ -12,6 +12,11 @@
 
 Built for microsecond-fast direct kernel `sysfs` I/O, robust external monitor DDC/CI control via `ddcutil`, and sub-5MB background memory footprint (< 4MB RSS typical) with zero idle CPU overhead.
 
+<p align="center">
+  <img src="docs/screenshots/1.png" alt="LBrightness Preview 1" width="48%">
+  <img src="docs/screenshots/2.png" alt="LBrightness Preview 2" width="48%">
+</p>
+
 ---
 
 ## 🚀 Key Features
