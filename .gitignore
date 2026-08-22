@@ -60,6 +60,8 @@ CLAUDE.md
 # Packaging and distribution
 dist/
 *.deb
+*.tar.gz
+SHA256SUMS.txt
 
 # Rust build artifacts
 target/
